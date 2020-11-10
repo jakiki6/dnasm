@@ -53,9 +53,9 @@ def _parse(expression):
         res = expression[5:].replace(" ", "")
         buf = ""
         for char in res:
-            if not char in ("t", "g", "c", "a"):
+            if not char in ("t", "g", "c", "a", "u"):
                 raise ValueError(char + " is not a valid base!")
-        return res
+        return res.replace("u", "t")
     elif expression.startswith("start"):
         return "atg"
     elif expression.startswith("end"):
