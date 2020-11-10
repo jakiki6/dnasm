@@ -1,5 +1,5 @@
 #!/bin/env python3
-import sys, argparse
+import sys, argparse, math
 
 from constants import *
 
@@ -75,6 +75,7 @@ parser = argparse.ArgumentParser(description='RNA/DNA assembler')
 parser.add_argument("--input", type=str, default="/dev/stdin")
 parser.add_argument("--output", type=str, default="/dev/stdout")
 parser.add_argument("--manual", help="display manual", action="store_true")
+parser.add_argument("--compressed", help="compress genom in smaller data (4 bases per byte)", action="store_true")
 args = parser.parse_args()
 
 if args.manual:
@@ -120,6 +121,16 @@ else:
     fmtsize = f"{fsize} tb"
 
 print(f"Output has a size of {fmtsize}.")
+
+if args.compress:
+    buf = bytearray(math.ceil(len(res) / 3))
+    offset = 0
+    for char in res:
+        buf[offset // 8] |= mapping[char] << (offset % 8)
+        offset += 2
+    res = ""
+    for char in buf:
+        res += chr(char)
 
 with open(parser.parse_args().output, "w") as file:
     file.write(result)
