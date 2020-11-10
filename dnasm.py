@@ -1,6 +1,8 @@
 #!/bin/env python3
 import sys, argparse
 
+from constants import *
+
 def strip_comments(line):
     return line.split(";")[0]
 def strip_other(line):
@@ -47,12 +49,25 @@ def parse(expression):
         return _parse(expression)
 
 def _parse(expression):
-    if expression.startswith("rna"):
-        res = expression[3:]
+    if expression.startswith("bases"):
+        res = expression[5:].replace(" ", "")
+        buf = ""
         for char in res:
             if not char in ("t", "g", "c", "a"):
-                raise ValueError(char + " is not a valid rna!")
+                raise ValueError(char + " is not a valid base!")
         return res
+    elif expression.startswith("start"):
+        return "atg"
+    elif expression.startswith("end"):
+        return "tag"
+    elif expression.startswith("acids"):
+        res = [x.strip() for x in expression[5:].split(",")]
+        buf = ""
+        for acid in res:
+            if not acid in ACIDS.keys():
+                raise ValueError(char + " is not a valid amino acid!")
+            buf += ACIDS[acid]
+        return buf
     else:
         return ""
 
@@ -86,6 +101,25 @@ for line in content.split("\n"):
     line = strip_comments(line) 
     line = strip_other(line)   
     result += parse(line)
+
+size = len(result)
+fsize = size
+
+while fsize > 1000:
+    fsize = fsize / 100 // 1 / 10
+
+if 0 <= size < 1000:
+    fmtsize = f"{fsize} base(s)"
+elif 1000 <= size <= 1000000:
+    fmtsize = f"{fsize} kb"
+elif 1000000 <= size <= 1000000000:
+    fmtsize = f"{fsize} mb"
+elif 1000000000 <= size <= 1000000000000:
+    fmtsize = f"{fsize} gb"
+else:
+    fmtsize = f"{fsize} tb"
+
+print(f"Output has a size of {fmtsize}.")
 
 with open(parser.parse_args().output, "w") as file:
     file.write(result)
