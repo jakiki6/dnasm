@@ -59,7 +59,7 @@ def _parse(expression):
     elif expression.startswith("start"):
         return "atg"
     elif expression.startswith("end"):
-        return "tag"
+        return "taa" # only "safe"
     elif expression.startswith("acids"):
         res = [x.strip() for x in expression[5:].split(",")]
         buf = ""

@@ -35,7 +35,7 @@ IUPAC = {
     "I": "att",
     "K": "aaa",
     "L": "tta",
-    "M": "atg",
+    "M": "atg", # start
     "N": "cgt",
     "O": "tag", # can be decoded as stop
     "P": "cct",
