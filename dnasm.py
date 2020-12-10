@@ -50,7 +50,7 @@ def parse(expression):
 
 def _parse(expression):
     if expression.startswith("bases"):
-        res = expression[5:].replace(" ", "")
+        res = expression.replace("bases", "").replace(" ", "").lower()
         buf = ""
         for char in res:
             if not char in ("t", "g", "c", "a", "u"):
