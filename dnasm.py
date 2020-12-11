@@ -72,11 +72,11 @@ def _parse(expression):
         return ""
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
-parser.add_argument("--input", type=str, default="/dev/stdin")
-parser.add_argument("--output", type=str, default="/dev/stdout")
-parser.add_argument("--manual", help="display manual", action="store_true")
-parser.add_argument("--compress", help="compress genom in smaller data (4 bases per byte)", action="store_true")
-parser.add_argument("--rna", help="convert it to rna (replaces t with u)", action="store_true")
+parser.add_argument("--input", "-i", type=str, default="/dev/stdin")
+parser.add_argument("--output", "-o", type=str, default="/dev/stdout")
+parser.add_argument("--manual", "-m", help="display manual", action="store_true")
+parser.add_argument("--compress", "-c", help="compress genom in smaller data (4 bases per byte)", action="store_true")
+parser.add_argument("--rna", "-r", help="convert it to rna (replaces t with u)", action="store_true")
 args = parser.parse_args()
 
 if args.manual:
