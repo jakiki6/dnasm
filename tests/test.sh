@@ -1,13 +1,18 @@
 #!/bin/bash
 
+passed=0
+ran=0
+
 mkdir tmp
 touch tmp/test.asm
 touch tmp/test.rna
 touch tmp/ref.rna
 
 function assemble() {
-	python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
+	ran=$((ran + 1))
+	python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna &> /dev/null && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
+	passed=$((passed + 1)) && \
 	echo Passed || (
 		echo Failed
 #		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
@@ -39,12 +44,19 @@ echo acids Start, Ala, End > tmp/test.asm
 echo -n atggcttaa > tmp/ref.rna
 assemble
 
-echo -n Test 6: Sars-CoV-2 ...\ 
+echo -n Test 6: tail opcode ...\ 
+echo start > tmp/test.asm
+echo end >> tmp/test.asm
+echo tail 9 >> tmp/test.asm
+echo -n atgtaaaaaaaaaaa > tmp/ref.rna
+assemble
+
+echo -n Test 7: Sars-CoV-2 ...\ 
 cat ../virus/sarscov2.asm > tmp/test.asm
 python3 ../dnasm.py -i tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
-echo -n Test 5: Protein loading system ...\ 
+echo -n Test 8: Protein loading system ...\ 
 echo protein_db 1791269089 > tmp/test.asm
 echo -n > tmp/ref.rna
 python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
@@ -53,3 +65,5 @@ python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
 	echo Passed
 
 rm -fr tmp
+
+echo Summary: $passed/$ran test were successful

@@ -25,3 +25,8 @@ def acids(line):
             raise ValueError(char + " is not a valid amino acid!")
         buf += ACIDS[acid]  
     return buf
+
+def tail(line):
+    line = line.replace("tail", "")
+    i = int(line)
+    return "a" * i

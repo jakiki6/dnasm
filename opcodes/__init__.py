@@ -7,4 +7,5 @@ OPCODES = {
     "acids": basic.acids,
     "nop": lambda x: "",
     "protein_db": protein.get_protein_by_id,
+    "tail": basic.tail,
 }
