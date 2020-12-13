@@ -33,12 +33,6 @@ def prepare(line):
         if res[len(res) - 1] != "\n":
             res += "\n"
         return res
-    elif line.startswith("%protein"):
-        name = line[8:]
-        res = get_protein(name)
-        if res[len(res) - 1] != "\n":
-            res += "\n"
-        return res
     else:
         return line
 
@@ -81,7 +75,7 @@ parser.add_argument("--rna", "-r", help="convert it to rna (replaces t with u)",
 args = parser.parse_args()
 
 if args.manual:
-    import os
+    os.chdir(home)
     os.system("less manual.txt")
     exit()
 
