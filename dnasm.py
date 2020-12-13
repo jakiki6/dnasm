@@ -27,7 +27,7 @@ def strip_other(line):
 
 def prepare(line):
     if line.startswith("%include"):
-        path = line[9:len(line) - 2]
+        path = line[8:]
         with open(path, "r") as file:
             res = file.read()
         if res[len(res) - 1] != "\n":

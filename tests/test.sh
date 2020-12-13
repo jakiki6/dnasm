@@ -15,7 +15,7 @@ function assemble() {
 	passed=$((passed + 1)) && \
 	echo Passed || (
 		echo Failed
-#		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
+		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
 	)
 }
 
@@ -59,10 +59,20 @@ assemble
 echo -n Test 8: Protein loading system ...\ 
 echo protein_db 1791269089 > tmp/test.asm
 echo -n > tmp/ref.rna
+ran=$((ran + 1))
 python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	echo Failed || \
-	echo Passed
+	echo Passed && \
+	passed=$((passed + 1))
+
+echo -n Test 9: Including test ...\ 
+echo start > tmp/test.asm
+echo %include tmp/test2.asm >> tmp/test.asm
+echo end > tmp/test2.asm
+echo -n atgtaa > tmp/ref.rna
+assemble
+
 
 rm -fr tmp
 
