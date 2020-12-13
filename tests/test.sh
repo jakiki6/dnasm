@@ -10,7 +10,7 @@ function assemble() {
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	echo Passed || (
 		echo Failed
-		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
+#		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
 	)
 }
 
@@ -43,5 +43,13 @@ echo -n Test 6: Sars-CoV-2 ...\
 cat ../virus/sarscov2.asm > tmp/test.asm
 python3 ../dnasm.py -i tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
+
+echo -n Test 5: Protein loading system ...\ 
+echo protein_db 1791269089 > tmp/test.asm
+echo -n > tmp/ref.rna
+python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
+	cmp --silent tmp/test.rna tmp/ref.rna && \
+	echo Failed || \
+	echo Passed
 
 rm -fr tmp

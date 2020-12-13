@@ -1,5 +1,7 @@
 #!/bin/env python3
 import sys, argparse, math, os
+import log
+logger = log.Logger()
 
 pwd = os.getcwd()
 home = os.path.dirname(os.path.realpath(__file__))
@@ -8,11 +10,8 @@ os.chdir(home)
 
 from constants import *
 from opcodes import OPCODES
-import log
 
 os.chdir(pwd)
-
-logger = log.Logger()
 
 def strip_comments(line):
     return line.split(";")[0].split("#")[0]
