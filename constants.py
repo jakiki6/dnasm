@@ -20,7 +20,7 @@ ACIDS = {
     "Trp": "tgg",
     "Tyr": "tat",
     "Val": "gtt",
-    "STOP": "taa",
+    "End": "taa",
 }
 
 IUPAC = {

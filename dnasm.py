@@ -1,7 +1,18 @@
 #!/bin/env python3
-import sys, argparse, math
+import sys, argparse, math, os
+
+pwd = os.getcwd()
+home = os.path.dirname(os.path.realpath(__file__))
+
+os.chdir(home)
 
 from constants import *
+from opcodes import OPCODES
+import log
+
+os.chdir(pwd)
+
+logger = log.Logger()
 
 def strip_comments(line):
     return line.split(";")[0].split("#")[0]
@@ -33,12 +44,17 @@ def prepare(line):
         return line
 
 def parse(expression):
+    logger.debug(f"Parsing expression: {expression}")
     if expression.startswith("times"):
         i = ""
-        for char in expression[5:]:
-            if not char in ("0", "1", "2" "3", "4", "5", "6", "7", "8", "9"):
+        logger.debug(f"Extracting number from {expression.replace('times', '').replace(' ', '').replace('    ', '')}")
+        for char in expression.replace("times", "").replace(" ", "").replace("\t", ""):
+            try:
+                int(char)
+            except:
                 break
             i += char
+        logger.debug(f"Got {i}")
         offset = 5 + len(i)
         i = int(i)
         res = ""
@@ -49,27 +65,13 @@ def parse(expression):
         return _parse(expression)
 
 def _parse(expression):
-    if expression.startswith("bases"):
-        res = expression.replace("bases", "").replace(" ", "").lower()
-        buf = ""
-        for char in res:
-            if not char in ("t", "g", "c", "a", "u"):
-                raise ValueError(char + " is not a valid base!")
-        return res.replace("u", "t")
-    elif expression.startswith("start"):
-        return "atg"
-    elif expression.startswith("end"):
-        return "taa" # only "safe"
-    elif expression.startswith("acids"):
-        res = [x.strip() for x in expression[5:].split(",")]
-        buf = ""
-        for acid in res:
-            if not acid in ACIDS.keys():
-                raise ValueError(char + " is not a valid amino acid!")
-            buf += ACIDS[acid]
-        return buf
-    else:
+    for key, val in OPCODES.items():
+        if expression.startswith(key):
+            return val(expression)
+    if expression == "":
         return ""
+    logger.warn(f"Unknown expression: {expression}")
+    return ""
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
 parser.add_argument("--input", "-i", type=str, default="/dev/stdin")
@@ -94,7 +96,9 @@ _content = ""
 for line in content.split("\n"):
     line = strip_comments(line)
     line = strip_other(line)
-    _content += prepare(line)
+    if line.strip() == "":
+        continue
+    _content += prepare(line) + "\n"
 
 content = _content
 result = ""
@@ -121,7 +125,7 @@ elif 1000000000 <= size <= 1000000000000:
 else:
     fmtsize = f"{fsize} tb"
 
-print(f"Output has a size of {fmtsize}.")
+logger.info(f"Output has a size of {fmtsize}.")
 
 if args.rna:
     result = result.replace("t", "u")
