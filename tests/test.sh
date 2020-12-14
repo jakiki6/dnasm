@@ -57,7 +57,7 @@ python3 ../dnasm.py -i tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
 echo -n Test 8: Protein loading system ...\ 
-echo protein_db 1791269089 > tmp/test.asm
+echo protein_db WP_001149592.1 > tmp/test.asm # I don't have that protein :(
 echo -n > tmp/ref.rna
 ran=$((ran + 1))
 python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
