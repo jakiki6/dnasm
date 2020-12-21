@@ -4,7 +4,7 @@ NAME
 	DNAsm - something stupid you won't need in the near future
 
 SYNOPSIS
-	dnasm [--input <path>] [--output <path>] [--manual]
+	dnasm [--input <path>] [--output <path>] [--manual] [--compress] [--rna]
 
 DESCRIPTION
 	An assembler like nasm for genetic related things. You can use it for building RNA/DNA and insert
@@ -17,6 +17,10 @@ OPTIONS
 		Path for the output.
 	--manual
 		Displays this.
+	--compress
+		Outputs a smaller version of the compiled dna/rna (it uses 2 bits per base)
+	--rna
+		Replaces all "t" with "u"
 
 AUTHOR
 	Jakob Walter Kirsch
@@ -46,9 +50,19 @@ COPYRIGHT
 
 ASM-COMMANDS
 	Note: commands starting with % are processed by the preprocessor
-	rna <sequence>
-		Inserts a raw sequence of RNA.
 	%include <path>
 		Inserts the assembler from the given file into the current place.
-	%protein <name>
-		Inserts the given protein into the current place.
+	bases <bases>
+		Adds raw bases (e.g. taa)
+	start
+		Adds start bases (atg)
+	end
+		Adds end bases (taa)
+	acids
+		Adds acids (e.g. Cys)
+	nop
+		Does nothing
+	protein_db <id>
+		Fetches a protein by the given id from www.ncbi.nlm.nih.gov
+	tail <lenght>
+		Adds a tail of "a" of the given length
