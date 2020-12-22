@@ -66,3 +66,5 @@ ASM-COMMANDS
 		Fetches a protein by the given id from www.ncbi.nlm.nih.gov
 	tail <lenght>
 		Adds a tail of "a" of the given length
+	; <text>
+		Everything after a ";" is ignored. You can use it for comments.
