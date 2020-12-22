@@ -1,7 +1,11 @@
 #!/bin/env python3
 import sys, argparse, math, os
 import log
-logger = log.Logger()
+
+if "DEBUG" in os.environ.keys():
+    logger = log.Logger(level=0)
+else:
+    logger = log.Logger()
 
 pwd = os.getcwd()
 home = os.path.dirname(os.path.realpath(__file__))
