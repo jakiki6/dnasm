@@ -52,7 +52,7 @@ echo -n atgtaaaaaaaaaaa > tmp/ref.rna
 assemble
 
 echo -n Test 7: Sars-CoV-2 ...\ 
-cat ../virus/sarscov2.asm > tmp/test.asm
+cat ../../shared/virus/sarscov2.asm > tmp/test.asm
 python3 ../dnasm.py -i tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
