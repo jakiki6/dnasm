@@ -1,5 +1,22 @@
 from __main__ import shared
-import sys, os
+import sys, os, hashlib, json
+
+shared["analysed"] = None
+
+
+def splitin(string, size):
+    res = []
+    i = size
+    r = ""
+    for char in string:
+        r += char
+        if i == 0:
+            res.append(r)
+            r = ""
+            i = size
+        i -= 1
+    return res
+
 
 commands = {}
 
@@ -18,12 +35,87 @@ def help(command):
     print("\thelp: help")
 commands["help"] = help
 
-def load(command):
+def loadfile(command):
     file_name = command[4:].strip()
     print("Loading", file_name)
     try:
         with open(file_name, "r") as file:
             shared["content"] = file.read()
+        shared["analysed"] = None
     except Exception as e:
         print("File not found:", e)
+commands["loadfile"] = loadfile
+
+def analyse(command):
+    shared["analysed"] = {}
+    tmp = {}
+    state = 0
+    cstring = ""
+    for base in splitin(shared["content"], 3):
+        if base == "atg" and state == 0:
+            state = 1
+        elif base in ("tag", "tga", "taa") and state == 1:
+            state = 0
+            cstring += base
+            tmp[hashlib.sha256(cstring.encode()).hexdigest()[:6]] = cstring
+            cstring = ""
+
+        if state == 1:
+            cstring += base
+
+    shared["analysed"]["strings"] = tmp
+
+    shared["analysed"]["stats"] = {}
+    shared["analysed"]["stats"]["strings_found"] = len(shared["analysed"]["strings"])
+commands["analyse"] = analyse
+
+def stats(command):
+    if shared["analysed"] == None:
+        print("Run analyse first")
+        return
+
+    print("Strings:", shared["analysed"]["stats"]["strings_found"])
+    for key, val in shared["analysed"]["strings"].items():
+        print(f"\t{key}: {len(val)}")
+commands["stats"] = stats
+
+def peek(command):
+    name = command[4:].strip()
+    if shared["analysed"] == None:
+        print("Run analyse first")
+        return
+
+    if not name in shared["analysed"]["strings"].keys():
+        print(name, "not found")
+    else:
+        print(shared["analysed"]["strings"][name])
+commands["peek"] = peek
+
+def rename(command):
+    src, dest = command[6:].strip().split(" ")
+    if not src in shared["analysed"]["strings"].keys():
+        print(src, "does not exist")
+    elif dest in shared["analysed"]["strings"].keys():
+        print(dest, "exists")
+    else:
+        shared["analysed"]["strings"][dest] = shared["analysed"]["strings"][src]
+        del shared["analysed"]["strings"][src]
+commands["rename"] = rename
+
+def save(command):
+    file_name = command[4:].strip()
+    with open(file_name, "w") as file:
+        file.write(json.dumps(shared))
+commands["save"] = save
+
+def load(command):
+    file_name = command[4:].strip()
+    try:
+        with open(file_name, "r") as file:
+            shared.clear()
+            tmp = json.load(file)
+            for key, val in tmp.items():
+                shared[key] = val
+    except:
+        print("File not found")
 commands["load"] = load
