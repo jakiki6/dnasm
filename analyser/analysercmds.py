@@ -50,18 +50,20 @@ def analyse(command):
     shared["analysed"] = {}
     tmp = {}
     state = 0
+    lindex = 0
     cstring = ""
-    for base in splitin(shared["content"], 3):
+    for index, base in enumerate(splitin(shared["content"], 3)):
         if base == "atg" and state == 0:
             state = 1
+            cstring = ""
+            lindex = index
         elif base in ("tag", "tga", "taa") and state == 1:
             state = 0
             cstring += base
-            tmp[hashlib.sha256(cstring.encode()).hexdigest()[:6]] = cstring
-            cstring = ""
+            tmp[f"t_{len(tmp.keys())}"] = {"string": cstring, "index": lindex * 3}
+            continue
 
-        if state == 1:
-            cstring += base
+        cstring += base
 
     shared["analysed"]["strings"] = tmp
 
@@ -76,7 +78,7 @@ def stats(command):
 
     print("Strings:", shared["analysed"]["stats"]["strings_found"])
     for key, val in shared["analysed"]["strings"].items():
-        print(f"\t{key}: {len(val)}")
+        print(f"\t{key}: {len(val['string'])} from {val['index']} to {len(val['string']) + val['index']}")
 commands["stats"] = stats
 
 def peek(command):
@@ -119,3 +121,14 @@ def load(command):
     except:
         print("File not found")
 commands["load"] = load
+
+def visualise(command):
+    width, _ = os.get_terminal_size(0)
+    bar = ["#" for _ in range(0, width)]
+
+    for _, val in shared["analysed"]["strings"].items():
+        for i in range(round(val["index"] / len(shared["content"]) * width), round((val["index"] + len(val["string"])) / len(shared["content"]) * width)):
+            bar[i] = "@"
+
+    print("".join(bar))
+commands["visualise"] = visualise
