@@ -44,7 +44,7 @@ def loadfile(command):
         shared["analysed"] = None
     except Exception as e:
         print("File not found:", e)
-commands["loadfile"] = loadfile
+commands["file"] = loadfile
 
 def analyse(command):
     shared["analysed"] = {}
@@ -90,7 +90,7 @@ def peek(command):
     if not name in shared["analysed"]["strings"].keys():
         print(name, "not found")
     else:
-        print(shared["analysed"]["strings"][name])
+        print(shared["analysed"]["strings"][name]["string"][:30] + "...")
 commands["peek"] = peek
 
 def rename(command):
@@ -132,3 +132,14 @@ def visualise(command):
 
     print("".join(bar))
 commands["visualise"] = visualise
+
+def del(command):
+    name = command[4:].strip()
+    if shared["analysed"] == None:
+        print("Run analyse first")
+        return
+
+    if not name in shared["analysed"]["strings"].keys():
+        print(name, "not found")
+    else:
+        del shared["analysed"]["strings"][name]

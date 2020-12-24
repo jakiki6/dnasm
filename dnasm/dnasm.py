@@ -40,7 +40,7 @@ def prepare(line):
     else:
         return line
 
-def parse(expression):
+def parse(expression, content):
     logger.debug(f"Parsing expression: {expression}")
     if expression.startswith("times"):
         i = ""
@@ -56,15 +56,15 @@ def parse(expression):
         i = int(i)
         res = ""
         for _ in range(0, i):
-            res += _parse(expression[offset:])
+            res += _parse(expression[offset:], content)
         return res
     else:
-        return _parse(expression)
+        return _parse(expression, content)
 
-def _parse(expression):
+def _parse(expression, content):
     for key, val in OPCODES.items():
         if expression.startswith(key):
-            return val(expression)
+            return val(expression, content)
     if expression == "":
         return ""
     logger.warn(f"Unknown expression: {expression}")
@@ -103,7 +103,7 @@ result = ""
 for line in content.split("\n"):
     line = strip_comments(line) 
     line = strip_other(line)   
-    result += parse(line)
+    result += parse(line, result)
 
 size = len(result)
 fsize = size

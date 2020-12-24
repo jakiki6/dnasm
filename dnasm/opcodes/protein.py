@@ -7,7 +7,7 @@ sys.path = sys.path[:-1]
 from __main__ import logger
 
 
-def get_protein_by_id(line):
+def get_protein_by_id(line, content):
     protein_id = line.replace("protein_db", "")
     protein = ""
 

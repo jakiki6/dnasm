@@ -23,7 +23,10 @@ while True:
     for item, val in commands.items():
         if command.startswith(item):
             found = True
-            val(command)
+            try:
+                val(command)
+            except:
+                print("An error occured!")
             break
     if not found:
         print("Not found:", command)
