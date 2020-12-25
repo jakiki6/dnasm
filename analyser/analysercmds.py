@@ -133,7 +133,7 @@ def visualise(command):
     print("".join(bar))
 commands["visualise"] = visualise
 
-def del(command):
+def delete(command):
     name = command[4:].strip()
     if shared["analysed"] == None:
         print("Run analyse first")
@@ -143,3 +143,4 @@ def del(command):
         print(name, "not found")
     else:
         del shared["analysed"]["strings"][name]
+commands["del"] = delete

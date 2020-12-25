@@ -32,7 +32,7 @@ def tail(line, content):
     return "a" * i
 
 def point(line, content):
-    print(f"{line[5:]} at {len(content)}")
+    print(f"{line[5:]} at {len(content)}", file=sys.stderr)
     return ""
 
 def pad(line, content):
