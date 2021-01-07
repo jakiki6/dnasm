@@ -10,7 +10,7 @@ touch tmp/ref.rna
 
 function assemble() {
 	ran=$((ran + 1))
-	python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna &> /dev/null && \
+	python3 ../dnasm.py tmp/test.asm -o tmp/test.rna &> /dev/null && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	passed=$((passed + 1)) && \
 	echo Passed || (
@@ -52,15 +52,15 @@ echo -n atgtaaaaaaaaaaa > tmp/ref.rna
 assemble
 
 echo -n Test 7: Sars-CoV-2 ...\ 
-cat ../../shared/virus/sarscov2.asm > tmp/test.asm
-python3 ../dnasm.py -i tmp/test.asm -o tmp/ref.rna > /dev/null
+cat ../../shared/virus/sarscov2.asm > tmp/test.asm &> /dev/null
+python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
 echo -n Test 8: Protein loading system ...\ 
 echo protein_db WP_001149592.1 > tmp/test.asm # I don't have that protein :(
 echo -n > tmp/ref.rna
 ran=$((ran + 1))
-python3 ../dnasm.py -i tmp/test.asm -o tmp/test.rna > /dev/null && \
+python3 ../dnasm.py tmp/test.asm -o tmp/test.rna > /dev/null && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	echo Failed || \
 	echo Passed && \

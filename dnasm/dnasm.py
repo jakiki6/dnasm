@@ -71,7 +71,7 @@ def _parse(expression, content):
     return ""
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
-parser.add_argument("--input", "-i", type=str, default="/dev/stdin")
+parser.add_argument("input", type=str)
 parser.add_argument("--output", "-o", type=str, default="/dev/stdout")
 parser.add_argument("--manual", "-m", help="display manual", action="store_true")
 parser.add_argument("--compress", "-c", help="compress genom in smaller data (4 bases per byte)", action="store_true")
