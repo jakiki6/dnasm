@@ -64,6 +64,7 @@ def parse(expression, content):
 def _parse(expression, content):
     for key, val in OPCODES.items():
         if expression.startswith(key):
+            logger.debug(f"Got opcode {key}")
             return val(expression, content)
     if expression == "":
         return ""

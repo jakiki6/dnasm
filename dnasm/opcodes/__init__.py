@@ -1,4 +1,4 @@
-from . import basic, protein
+from . import basic, protein, database
 
 OPCODES = {
     "bases": basic.bases,
@@ -10,4 +10,5 @@ OPCODES = {
     "tail": basic.tail,
     "point": basic.point,
     "pad": basic.pad,
+    "snippet": database.snippet,
 }

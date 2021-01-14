@@ -15,7 +15,7 @@ if not os.path.isfile(args.file):
 
 try:
     modes[args.mode]["func"](args.file)
-except:
+except KeyError:
     print("Available modes:")
     for key, val in modes.items():
         print(f"\t{key}:")
