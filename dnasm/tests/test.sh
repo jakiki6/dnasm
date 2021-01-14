@@ -15,7 +15,7 @@ function assemble() {
 	passed=$((passed + 1)) && \
 	echo Passed || (
 		echo Failed
-		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
+#		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
 	)
 }
 
