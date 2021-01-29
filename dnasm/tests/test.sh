@@ -51,12 +51,27 @@ echo tail 9 >> tmp/test.asm
 echo -n atgtaaaaaaaaaaa > tmp/ref.rna
 assemble
 
-echo -n Test 7: Sars-CoV-2 ...\ 
-cat ../../shared/virus/sarscov2.asm > tmp/test.asm &> /dev/null
+echo -n Test 7: cap opcode ...\ 
+echo cap > tmp/test.asm
+echo -n ga > tmp/ref.rna
+assemble
+
+echo -n Test 8: linker opcode ...\ 
+echo linker > tmp/test.asm
+echo -n gcatatgact > tmp/ref.rna
+assemble
+
+echo -n Test 9: Sars-CoV-2 ...\ 
+cat ../../shared/examples/sarscov2.asm > tmp/test.asm &> /dev/null
 python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
-echo -n Test 8: Protein loading system ...\ 
+echo -n Test 10: Sars-CoV-2 vaccine ...\ 
+cat ../../shared/examples/vaccine.asm > tmp/test.asm &> /dev/null
+python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
+assemble
+
+echo -n Test 11: Protein loading system ...\ 
 echo protein_db WP_001149592.1 > tmp/test.asm # I don't have that protein :(
 echo -n > tmp/ref.rna
 ran=$((ran + 1))
@@ -66,17 +81,17 @@ python3 ../dnasm.py tmp/test.asm -o tmp/test.rna > /dev/null && \
 	echo Passed && \
 	passed=$((passed + 1))
 
-echo -n Test 9: Including test ...\ 
+echo -n Test 12: Including test ...\ 
 echo start > tmp/test.asm
 echo %include tmp/test2.asm >> tmp/test.asm
 echo end > tmp/test2.asm
 echo -n atgtaa > tmp/ref.rna
 assemble
 
-echo Test 10: snippet database
+echo Test 13: snippet database
 echo -n "  1. from local database ... "
 echo snippet 001cee75e7265a50f646b1bbf527ef652b0bbdc1a65d55463647e7adf8ba708a9f > tmp/test.asm
-python3 ../dnasm.py ../../shared/virus/sarscov2.asm -o tmp/ref.rna &> /dev/null
+python3 ../dnasm.py ../../shared/examples/sarscov2.asm -o tmp/ref.rna &> /dev/null
 assemble
 
 rm -fr tmp

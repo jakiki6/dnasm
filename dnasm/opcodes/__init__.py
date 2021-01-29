@@ -11,4 +11,6 @@ OPCODES = {
     "point": basic.point,
     "pad": basic.pad,
     "snippet": database.snippet,
+    "cap": basic.cap,
+    "linker": basic.linker,
 }

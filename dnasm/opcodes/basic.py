@@ -7,9 +7,9 @@ def bases(line, content):
     res = line.replace("bases", "").replace(" ", "").lower()
     buf = ""
     for char in res:
-        if not char in ("t", "g", "c", "a", "u"):
+        if not char in ("t", "g", "c", "a", "u", "Ψ"):
             raise ValueError(char + " is not a valid base!")
-    return res.replace("u", "t")
+    return res.replace("u", "t").replace("Ψ", "t")
 
 def start(line, content):
     return "atg"
@@ -42,3 +42,9 @@ def pad(line, content):
         print("Negative value on padding")
         res = 0
     return "a" * res
+
+def cap(line, content):
+    return "ga"
+
+def linker(line, content):
+    return "gcatatgact"
