@@ -48,3 +48,10 @@ def cap(line, content):
 
 def linker(line, content):
     return "gcatatgact"
+
+def iupac(line, content):
+    line = line[5:].upper()
+    res = ""
+    for char in line:
+        res += IUPAC[char]
+    return res
