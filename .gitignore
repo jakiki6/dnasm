@@ -3,3 +3,7 @@ __pycache__/*
 *.o
 tmp/*
 DEADJOE
+
+# Build
+dnasm.deb
+build/*

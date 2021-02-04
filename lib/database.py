@@ -1,4 +1,10 @@
-import hashlib, os
+import hashlib, os, requests
+
+sources = [
+    f"file://{os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'database')}",
+    "file:///usr/share/dnasm/database"
+    "https://github.com/jakiki6/dnasm-database/raw/main"
+]
 
 def get_full_object(cid):
     obj = load_object(cid)
@@ -40,17 +46,29 @@ def save_raw_object(data):
     return os.path.join(home, hash)
 
 def load_raw_object(cid):
+    for source in sources:
+        data = load_data_from(cid, source)
+        if data != None:
+            return data
+    raise Exception(f"{cid} not found in database")
+
+def load_data_from(cid, source):
     try:
-        cwd = os.getcwd()
-        home = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "database")
-        os.chdir(home)
-        with open(cid, "rb") as file:
-            data = file.read()
-        os.chdir(cwd)
-        assert hash_object(data) == cid
-        return data
-    except:
-        raise Exception(f"object {cid} not found")
+        if source.startswith("file://"):
+            source = source[7:]
+            cwd = os.getcwd()
+            os.chdir(source)
+            with open(cid, "rb") as file:
+                data = file.read()
+            os.chdir(cwd)
+            assert hash_object(data) == cid
+            return data
+        elif source.startswith("http://") or source.startswith("https://"):
+            source = source + "/" + cid
+            data = requests.get(source).content
+            return data
+    except Exception:
+        return None
 
 def load_object(cid):
     obj = load_raw_object(cid)
