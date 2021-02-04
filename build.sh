@@ -14,6 +14,7 @@ Priority: optional
 Architecture: all
 Essential: no
 Maintainer: Jakiki6
+Depends: python3, python3-requests
 Description: Dnasm and tools build from commit $(git rev-parse HEAD | tr -d '\n')
 EOF
 
