@@ -39,3 +39,5 @@ ln -s /opt/dnasm/toolbox/toolbox.py usr/bin/toolbox
 cd ..
 dpkg-deb --build build
 mv build.deb dnasm.deb
+
+rm -fr build
