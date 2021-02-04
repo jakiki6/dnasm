@@ -1,8 +1,6 @@
 # DNAsm
-An assembler for dna/rna. It's not nearly finished yet.
+An assembler for dna/rna with some tools. It's not nearly finished yet.
 
-# Goals
-- write an assembler that can:
-  - help you write "code" for dna/rna and comment it
-  - have a system with modules
-  - have some useful tools like converting a piece of rna to a gen
+Feel free to suggest any features.
+
+[Discord server](https://discord.gg/ZQXF828M)
