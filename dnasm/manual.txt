@@ -66,5 +66,21 @@ ASM-COMMANDS
 		Fetches a protein by the given id from www.ncbi.nlm.nih.gov
 	tail <lenght>
 		Adds a tail of "a" of the given length
+	point <name>
+		Marks a point in the code. This and the position of it will be shown
+		when it gets compiled
+	pad <length>
+		Does the same thing as tail but is used to pad inside the code and not
+		at the end
+	snippet <id>
+		Inserts a snippet by the given id. Snippets can be build with toolbox and are stored
+		in the database directory
+	cap
+		Adds the 2 bases cap at the start
+	linker
+		Adds the gcatatgact linker which can be useful for printing
+		(used in the Sars-CoV-2 vaccine)
+	iupac
+		Unpacks the bases from iupac compressed code
 	; <text>
 		Everything after a ";" is ignored. You can use it for comments.

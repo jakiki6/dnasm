@@ -1,4 +1,4 @@
-import sys, os, requests
+import sys, os, requests, random
 cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
@@ -76,3 +76,25 @@ def build_assembly_from_nih():
         exit(2)
 
     data = utils.tabs2dict(buf)
+
+def mutate_genome():
+    filename, ratio = require(2, "<file name> <ratio>")
+
+    try:
+        ratio = int(ratio) / 100
+        assert 0 <= ratio <= 100
+    except:
+        print(f"Invalid ratio")
+
+    data = get_file_content(filename)
+    mdata = ""
+
+    for char in data:
+        if random.randint(0, 99) < ratio:
+            char = random.choice("tcag")
+        mdata += char
+
+    with open(filename, "w") as file:
+        file.write(mdata)
+
+modes["mutate_genome"] = {"func": mutate_genome, "desc": "Randomly mutate genome by given ratio (e.g 2 for 2%)"}
