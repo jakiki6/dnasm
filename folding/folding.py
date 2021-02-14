@@ -1,5 +1,7 @@
 import numpy as np, random, math
 
+
+
 class Folder(object):
     def __init__(self, acids):
         self.acids = acids
@@ -21,9 +23,17 @@ class Folder(object):
         for i in range(2, len(self.acids) + 2):
             self.space[middle][middle][i] = self.acids[i - 2]
 
+        # make a list of amino connections
+        self.acons = []
+        # make a list of H-H connections
+        self.hhcons = []
+
+        # setup acons
+        for i in range(2, len(self.acids) + 1):
+            self.acons.append(((middle, middle, i), (middle, middle, i + 1)))
+
     def fold(self):
-        # todo
-        pass
+        raise NotImplementedError("This is a generic class")
 
     def plot(self):
         import matplotlib.pyplot as plt
@@ -34,7 +44,6 @@ class Folder(object):
         ax.set_xticks(range(0, self.space.shape[0]))
         ax.set_yticks(range(0, self.space.shape[1]))
         ax.set_zticks(range(0, self.space.shape[2]))
-        lx, ly, lz = None, None, None
 
         for x in range(0, len(self.space)):
             for y in range(0, len(self.space[x])):
@@ -47,8 +56,16 @@ class Folder(object):
                         for i in range(0, 3):
                             c.append(rng.randint(0, 256) / 256)
                         ax.scatter(z, x, -y, zdir='z', color=c)
-                        if lx != None:
-                            ax.plot([lz, z], [lx, x], zs=[-ly, -y], color=(0.7, 0.7, 0.7))
-                        lx, ly, lz = x, y, z
+
+        for acon in self.acons:
+            ax.plot([acon[1][2], acon[0][2]], [acon[1][0], acon[0][0]], zs=[-acon[1][1], -acon[0][1]], color=(0.7, 0.7, 0.7))
+
+        for hhcon in self.hhcons:
+            ax.plot([hhcon[1][2], hhcon[0][2]], [hhcon[1][0], hhcon[0][0]], zs=[-hhcon[1][1], -hhcon[0][1]], color=(0.7, 0.85, 1))
+
         plt.axis('off')
         plt.show()
+
+class ShakeFolder(Folder):
+    def fold(self):
+        pass
