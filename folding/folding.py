@@ -66,6 +66,12 @@ class Folder(object):
         plt.axis('off')
         plt.show()
 
-class ShakeFolder(Folder):
+class EnergyFolder(Folder):
+    def resolve_energy(self, point):
+        raise NotImplementedError("This is a generic class")
+
+class ShakeFolder(EnergyFolderFolder):
     def fold(self):
+        pass
+    def move(self, point, vec):
         pass

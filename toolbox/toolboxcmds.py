@@ -4,6 +4,9 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
 import database, utils
 sys.path = sys.path[:-1]
+sys.path.append(os.path.join(os.getcwd(), "..", "dnasm"))
+from constants import ACIDS
+sys.path = sys.path[:-1]
 os.chdir(cwd)
 
 def require(num, usage):
@@ -78,10 +81,10 @@ def build_assembly_from_nih():
     data = utils.tabs2dict(buf)
 
 def mutate_genome():
-    filename, ratio = require(2, "<file name> <ratio>")
+    filename, mode, ratio = require(3, "<file name> <mode> <ratio>")
 
     try:
-        ratio = int(ratio) / 100
+        ratio = float(ratio)
         assert 0 <= ratio <= 100
     except:
         print(f"Invalid ratio")
@@ -89,12 +92,24 @@ def mutate_genome():
     data = get_file_content(filename)
     mdata = ""
 
-    for char in data:
-        if random.randint(0, 99) < ratio:
-            char = random.choice("tcag")
-        mdata += char
+    if mode == "randomly":
+        for char in data:
+            if random.randint(0, 99) < ratio:
+                char = random.choice("tcag")
+            mdata += char
+    elif mode == "safe":
+        for i in range(0, len(data), 3):
+            trip = data[i:i+2]
+            if random.randint(0, 99) < ratio:
+                for key, val in ACIDS.items():
+                    if trip in val:
+                        trip = random.choice(val)
+            mdata += trip
+    else:
+        print("Invalid mode!")
+        return
 
     with open(filename, "w") as file:
         file.write(mdata)
 
-modes["mutate_genome"] = {"func": mutate_genome, "desc": "Randomly mutate genome by given ratio (e.g 2 for 2%)"}
+modes["mutate_genome"] = {"func": mutate_genome, "desc": "Randomly mutate genome by given ratio (e.g 2.0 for 2%)\nModes:\n\tnatural: randomly mutates\n\tsafe: the built protein stays the same"}
