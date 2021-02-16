@@ -72,12 +72,21 @@ def _parse(expression, content):
     return ""
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
-parser.add_argument("input", type=str)
+parser.add_argument("input", nargs="?", type=str)
 parser.add_argument("--output", "-o", type=str, default="/dev/stdout")
 parser.add_argument("--manual", "-m", help="display manual", action="store_true")
 parser.add_argument("--compress", "-c", help="compress genom in smaller data (4 bases per byte)", action="store_true")
 parser.add_argument("--rna", "-r", help="convert it to rna (replaces t with u)", action="store_true")
+parser.add_argument("--version", "-v", help="print version", action="store_true")
 args = parser.parse_args()
+
+if args.version:
+    print("dnasm from the dnasm project v1.0\nCopyright (C) 2021 Jakob Kirsch\nThis is free software; see the source for license conditions.")
+    exit()
+
+if not args.input:
+    parser.print_help()
+    exit()
 
 if args.manual:
     os.chdir(home)
