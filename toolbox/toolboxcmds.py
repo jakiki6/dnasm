@@ -11,7 +11,7 @@ os.chdir(cwd)
 
 def require(num, usage):
     if len(sys.argv) - 2 != num:
-        print(sys.argv[0], usage)
+        print(sys.argv[0], "<mode>", usage)
         exit(1)
     return sys.argv[2:]
 
@@ -33,7 +33,7 @@ def nop():
 modes["nop"] = {"func": nop, "desc": "No operation\nJust for testing"}
 
 def build_snippet():
-    file = require(1, "<file>")
+    file = require(1, "<file>")[0]
     data = get_file_content(file, "rb")
     print(f"Building snippet object {database.save_raw_object(database.build_data_object(data))}")
 modes["build_snippet"] = {"func": build_snippet, "desc": "Builds rna into the snippet format"}
