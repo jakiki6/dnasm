@@ -7,4 +7,4 @@ Feel free to suggest any features.
 * Shake folder (uses monte carlo method)
 * protein designer (needs folder)
 
-[Discord server](https://discord.gg/ZQXF828M)
+[Discord server](https://discord.gg/6D4NMY33kb)
