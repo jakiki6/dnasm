@@ -5,6 +5,7 @@ import numpy as np
 folder = folding.ShakeFolder(spike_test[:20])
 
 print("Test 1: run it :D")
+folder.plot()
 folder.fold()
 
 print("Test 2: plot it")

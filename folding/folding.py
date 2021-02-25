@@ -1,7 +1,5 @@
 import numpy as np, random, math
 
-
-
 class Folder(object):
     def __init__(self, acids):
         self.acids = acids
@@ -10,6 +8,7 @@ class Folder(object):
         size -= size % 2
         size += 1
         self.space = np.zeros((size, size, size))
+        self.size = size
 
         # fill the space with the actual acids
         # addressing is [x][y][z]
@@ -30,7 +29,7 @@ class Folder(object):
 
         # setup acons
         for i in range(2, len(self.acids) + 1):
-            self.acons.append(((middle, middle, i), (middle, middle, i + 1)))
+            self.acons.append([[middle, middle, i], [middle, middle, i + 1]])
 
     def fold(self):
         raise NotImplementedError("This is a generic class")
@@ -70,8 +69,25 @@ class EnergyFolder(Folder):
     def resolve_energy(self, point):
         raise NotImplementedError("This is a generic class")
 
-class ShakeFolder(EnergyFolderFolder):
-    def fold(self):
-        pass
-    def move(self, point, vec):
-        pass
+class ShakeFolder(EnergyFolder):
+    def fold(self, tries=10000):
+        for i in range(0, tries):
+            pos = [random.randint(1, self.size - 2) for _ in range(0, 3)]
+            vec = [random.randint(-1, 1) for _ in range(0, 3)]
+            self.try_move(pos, vec)
+    def try_move(self, point, vec):
+        newpoint = (point[0] + vec[0], point[1] + vec[1], point[2] + vec[2])
+        prot = self.space[point[0], point[1], point[2]]
+        if int(self.space[newpoint[0], newpoint[1], newpoint[2]]) != 0 or int(self.space[point[0], point[1], point[2]]) == 0:
+            return False
+
+        self.space[newpoint[0], newpoint[1], newpoint[2]] = self.space[point[0], point[1], point[2]]
+        self.space[point[0], point[1], point[2]] = 0
+
+        for i in range(0, len(self.acons)):
+            if self.acons[i][0] == point:
+                self.acons[i][0] = newpoint
+            if self.acons[i][1] == point:
+                self.acons[i][1] = newpoint
+
+        return True
