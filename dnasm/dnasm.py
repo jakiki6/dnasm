@@ -12,64 +12,9 @@ home = os.path.dirname(os.path.realpath(__file__))
 
 os.chdir(home)
 
-from constants import *
-from opcodes import OPCODES
+import dnasmcore
 
 os.chdir(pwd)
-
-def strip_comments(line):
-    return line.split(";")[0].split("#")[0]
-def strip_other(line):
-    res = ""
-    in_skip = False
-    for char in line:
-        if char in ("\"", "'"):
-            in_skip = not in_skip
-        if not in_skip and not char in ("\t", " "):
-            res += char
-    return res
-
-def prepare(line):
-    if line.startswith("%include"):
-        path = line[8:]
-        with open(path, "r") as file:
-            res = file.read()
-        if res[len(res) - 1] != "\n":
-            res += "\n"
-        return res
-    else:
-        return line
-
-def parse(expression, content):
-    logger.debug(f"Parsing expression: {expression}")
-    if expression.startswith("times"):
-        i = ""
-        logger.debug(f"Extracting number from {expression.replace('times', '').replace(' ', '').replace('    ', '')}")
-        for char in expression.replace("times", "").replace(" ", "").replace("\t", ""):
-            try:
-                int(char)
-            except:
-                break
-            i += char
-        logger.debug(f"Got {i}")
-        offset = 5 + len(i)
-        i = int(i)
-        res = ""
-        for _ in range(0, i):
-            res += _parse(expression[offset:], content)
-        return res
-    else:
-        return _parse(expression, content)
-
-def _parse(expression, content):
-    for key, val in OPCODES.items():
-        if expression.startswith(key):
-            logger.debug(f"Got opcode {key}")
-            return val(expression, content)
-    if expression == "":
-        return ""
-    logger.warn(f"Unknown expression: {expression}")
-    return ""
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
 parser.add_argument("input", nargs="?", type=str)
@@ -93,27 +38,10 @@ if args.manual:
     os.system("less manual.txt")
     exit()
 
-result = ""
-
 with open(args.input, "r") as file:
     content = file.read()
 
-_content = ""
-
-for line in content.split("\n"):
-    line = strip_comments(line)
-    line = strip_other(line)
-    if line.strip() == "":
-        continue
-    _content += prepare(line) + "\n"
-
-content = _content
-result = ""
-
-for line in content.split("\n"):
-    line = strip_comments(line) 
-    line = strip_other(line)   
-    result += parse(line, result)
+result = dnasmcore.process(content)
 
 size = len(result)
 fsize = size
