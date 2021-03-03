@@ -7,8 +7,8 @@ sys.path = sys.path[:-1]
 from __main__ import logger
 
 
-def get_protein_by_id(line, content):
-    protein_id = line.replace("protein_db", "")
+def get_protein_by_id(line):
+    protein_id = line.args[0]
     protein = ""
 
     buf = requests.get(f"https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id={protein_id}&db=protein&report=fasta").content.decode()

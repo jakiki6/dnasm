@@ -10,7 +10,7 @@ touch tmp/ref.rna
 
 function assemble() {
 	ran=$((ran + 1))
-	python3 ../dnasm.py tmp/test.asm -o tmp/test.rna &> /dev/null && \
+	python3 ../dnasm.py tmp/test.asm -o tmp/test.rna && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	passed=$((passed + 1)) && \
 	echo Passed || (
