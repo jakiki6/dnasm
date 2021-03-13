@@ -2,12 +2,13 @@ import hashlib, os, requests
 
 sources = [
     f"file://{os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'database')}",
-    "file:///usr/share/dnasm/database"
-    "https://github.com/jakiki6/dnasm-database/raw/main"
+    "file:///usr/share/dnasm/database",
+    "https://raw.githubusercontent.com/jakiki6/dnasm-database/main/"
 ]
 
 def get_full_object(cid):
     obj = load_object(cid)
+
     if obj["type"] == "data":
         return obj["data"]
     elif obj["type"] == "link":
@@ -15,6 +16,8 @@ def get_full_object(cid):
         for cid in obj["links"]:
             s += load_object(cid)
         return s
+    else:
+        return ""
 
 def build_data_object(data):
     data = b"\x00" + data
@@ -50,7 +53,13 @@ def load_raw_object(cid):
         data = load_data_from(cid, source)
         if data != None:
             return data
-    raise Exception(f"{cid} not found in database")
+    msg = f"{cid} not found in database\n"
+    msg += "searched sources:\n"
+
+    for source in sources:
+        msg += f"\t{source} -> not found\n"
+
+    raise Exception(msg)
 
 def load_data_from(cid, source):
     try:
@@ -66,12 +75,15 @@ def load_data_from(cid, source):
         elif source.startswith("http://") or source.startswith("https://"):
             source = source + "/" + cid
             data = requests.get(source).content
+            if data == b'404: Not Found':
+                data = None
             return data
     except Exception:
         return None
 
 def load_object(cid):
     obj = load_raw_object(cid)
+
     if obj[0] == 0x00:
         return {
             "type": "data",

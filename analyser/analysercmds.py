@@ -3,21 +3,6 @@ import sys, os, hashlib, json
 
 shared["analysed"] = None
 
-
-def splitin(string, size):
-    res = []
-    i = size
-    r = ""
-    for char in string:
-        r += char
-        if i == 0:
-            res.append(r)
-            r = ""
-            i = size
-        i -= 1
-    return res
-
-
 commands = {}
 
 def list(command):
@@ -42,26 +27,31 @@ def loadfile(command):
         with open(file_name, "r") as file:
             shared["content"] = file.read()
         shared["analysed"] = None
-    except Exception as e:
+    except FileNotFoundException as e:
         print("File not found:", e)
 commands["file"] = loadfile
 
 def analyse(command):
     shared["analysed"] = {}
     tmp = {}
-    state = 0
+    state = 1
     lindex = 0
     cstring = ""
-    for index, base in enumerate(splitin(shared["content"], 3)):
-        if base == "atg" and state == 0:
-            state = 1
+    index = 0
+    while index < len(shared["content"]):
+        base = shared["content"][index:index+2]
+        if base == "atg" and state == 1:
+            state = 3
             cstring = ""
             lindex = index
-        elif base in ("tag", "tga", "taa") and state == 1:
-            state = 0
+        elif base in ("tag", "tga", "taa") and state == 3:
+            state = 1
             cstring += base
-            tmp[f"t_{len(tmp.keys())}"] = {"string": cstring, "index": lindex * 3}
+            tmp[f"t_{len(tmp.keys())}"] = {"string": cstring, "index": lindex}
+            index += state
             continue
+
+        index += state
 
         cstring += base
 
