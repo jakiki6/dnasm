@@ -1,3 +1,10 @@
+; payload
+;  exec: ssRNA
+;  type: virus
+;  desc:
+;   Sars-CoV-2, pandemic virus from 2020, started 2019
+;  related: sarscov1 sarscov2_vaccine_pfizer
+
 ; not mine, I just translated this to my syntax
 ; see https://github.com/geohot/corona
 

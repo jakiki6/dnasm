@@ -1,3 +1,11 @@
+; payload
+;  exec: ssDNA
+;  type: virus
+;  desc:
+;   Adeno-associated virus, infects humans but doesn't cause any disease.
+;   Is a perfect for carrying payloads (e.g. vector vaccine)
+;  related:
+
 ; this is the Adeno-associated virus
 ; taken from https://www.ncbi.nlm.nih.gov/nuccore/KX583629.1
 

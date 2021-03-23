@@ -1,3 +1,9 @@
+; payload
+;  exec: mrna
+;  type: virus/protein/vaccine
+;  desc: Vaccine for Sars-CoV-2 from Biontech
+;  related: sarscov2
+
 ; Thanks to:
 ;    https://berthub.eu/articles/posts/reverse-engineering-source-code-of-the-biontech-pfizer-vaccine/
 ;    https://github.com/geohot/corona
@@ -31,5 +37,5 @@ bases CΨCGAGCΨGGΨACΨGCAΨGCACGCAAΨGCΨAGCΨGCCCCΨΨΨCCCGΨCCΨGGGΨACCCCG
 
 ; and finally a tail
 tail 30
-linker	; useful for printing
+linker	; useful for building
 tail 70
