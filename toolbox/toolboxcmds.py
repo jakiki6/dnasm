@@ -1,4 +1,4 @@
-import sys, os, requests, random
+import sys, os, requests, random, re
 cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
@@ -11,7 +11,7 @@ os.chdir(cwd)
 
 def require(num, usage):
     if len(sys.argv) - 2 != num:
-        print(sys.argv[0], "<mode>", usage)
+        print(sys.argv[0], sys.argv[1], usage)
         exit(1)
     return sys.argv[2:]
 
@@ -113,3 +113,30 @@ def mutate_genome():
         file.write(mdata)
 
 modes["mutate_genome"] = {"func": mutate_genome, "desc": "Randomly mutate genome by given ratio (e.g 2.0 for 2%)\nModes:\n\tnatural: randomly mutates\n\tsafe: the built protein stays the same"}
+
+def find_promoter():
+    filename, = require(1, "<file>")
+
+    # https://www.amberbiology.com/blog/2018/5/20/python-for-genomics-and-next-generation-sequencing
+    promoter = 'ttgaca.{15, 25}tataat'
+
+    try:
+        with open(filename, "r") as file:
+            nmatches = 0
+
+            for match in re.finditer(promoter, file.read().lower().replace("\n", "")):
+                nmatches += 1
+                print(f"{match.start()} {match.end()} {match.group()}")
+
+            print(f"{nmatches} matches")
+    except FileNotFoundError:
+        print(f"Not a file!")
+modes["find_promoter"] = {"func": find_promoter, "desc": "Finds promoter for potential genes in a chromosome"}
+
+def generate_random_dna():
+    try:
+        for i in range(0, int(require(1, "<amount>")[0])):
+            print(random.choice("actg"), end="")
+    except ValueError:
+        print("Not a valid amount", file=sys.stderr)
+modes["generate_random_dna"] = {"func": generate_random_dna, "desc": "generates random dna"}
