@@ -21,7 +21,6 @@ EOF
 mkdir opt
 mkdir opt/dnasm
 cp ../dnasm opt/dnasm/ -r
-cp ../analyser opt/dnasm/ -r
 cp ../toolbox opt/dnasm/ -r
 cp ../lib opt/dnasm/ -r
 mkdir opt/dnasm/database
@@ -33,7 +32,6 @@ rm -fr usr/share/dnasm/database/.git
 rm usr/share/dnasm/database/LICENSE
 mkdir usr/bin
 ln -s /opt/dnasm/dnasm/dnasm.py usr/bin/dnasm
-ln -s /opt/dnasm/analyser/analyser.py usr/bin/analyser
 ln -s /opt/dnasm/toolbox/toolbox.py usr/bin/toolbox
 
 cd ..
