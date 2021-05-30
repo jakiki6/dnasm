@@ -114,7 +114,7 @@ def mutate_genome():
 
 modes["mutate_genome"] = {"func": mutate_genome, "desc": "Randomly mutate genome by given ratio (e.g 2.0 for 2%)\nModes:\n\tnatural: randomly mutates\n\tsafe: the built protein stays the same"}
 
-def find_promoter():
+def find_promoter_bacteria():
     filename, = require(1, "<file>")
 
     # https://www.amberbiology.com/blog/2018/5/20/python-for-genomics-and-next-generation-sequencing
@@ -131,7 +131,7 @@ def find_promoter():
             print(f"{nmatches} matches")
     except FileNotFoundError:
         print(f"Not a file!")
-modes["find_promoter"] = {"func": find_promoter, "desc": "Finds promoter for potential genes in a chromosome"}
+modes["find_promoter_bacteria"] = {"func": find_promoter, "desc": "Finds promoter from bacteria for potential genes"}
 
 def generate_random_dna():
     try:
