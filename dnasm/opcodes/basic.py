@@ -8,9 +8,9 @@ def bases(line):
     res = "".join(line.args).lower()
     buf = ""
     for char in res:
-        if not char in ("t", "g", "c", "a", "u", "Ψ"):
+        if not char in ("t", "g", "c", "a", "u", "ψ"):
             raise ValueError(char + " is not a valid base!")
-    return res.replace("u", "t").replace("Ψ", "t")
+    return res.replace("u", "t").replace("ψ", "t")
 
 def start(line):
     return "atg"

@@ -1,4 +1,4 @@
-import sys, os, requests, random, re
+import sys, os, requests, random, re, textwrap
 cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
@@ -140,3 +140,31 @@ def generate_random_dna():
     except ValueError:
         print("Not a valid amount", file=sys.stderr)
 modes["generate_random_dna"] = {"func": generate_random_dna, "desc": "generates random dna"}
+
+def dump_utrs():
+    filename, = require(1, "<file>")
+
+    with open(filename, "r") as file:
+        pairs = textwrap.wrap(file.read().lower(), 3)
+        stage = 0
+
+        utr5 = ""
+        content = ""
+        utr3 = ""
+
+        for pair in pairs:
+            if stage == 0:
+                if pair != "atg":
+                    utr5 += pair
+                else:
+                    stage = 1
+            if stage == 1:
+                print(pair)
+                content += pair
+                if pair in ("tag", "tga", "taa"):
+                    stage = 2
+            elif stage == 2:
+                utr3 += pair
+
+#        print(f"utr5: {utr5}\ncontent: {content}\nutr3: {utr3}")
+modes["dump_utr"] = {"func": dump_utrs, "desc": "Dump utrs and content of mrna"}
