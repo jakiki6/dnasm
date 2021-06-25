@@ -44,7 +44,7 @@ def cap(line):
 def linker(line):
     return "gcatatgact"
 
-def iupac(line):
+def compressed(line):
     res = ""
     for char in "".join(line.args):
         res += IUPAC[char]

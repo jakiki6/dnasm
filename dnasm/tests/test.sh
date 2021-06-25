@@ -61,8 +61,8 @@ echo linker > tmp/test.asm
 echo -n gcatatgact > tmp/ref.rna
 assemble
 
-echo -n Test 9: iupac opcode ...\ 
-echo iupac MT* > tmp/test.asm
+echo -n Test 9: compressed opcode ...\ 
+echo compressed MT* > tmp/test.asm
 echo -n atgacttaa > tmp/ref.rna
 assemble
 

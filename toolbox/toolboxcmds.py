@@ -131,7 +131,7 @@ def find_promoter_bacteria():
             print(f"{nmatches} matches")
     except FileNotFoundError:
         print(f"Not a file!")
-modes["find_promoter_bacteria"] = {"func": find_promoter, "desc": "Finds promoter from bacteria for potential genes"}
+modes["find_promoter_bacteria"] = {"func": find_promoter_bacteria, "desc": "Finds promoter from bacteria for potential genes"}
 
 def generate_random_dna():
     try:
@@ -151,6 +151,7 @@ def dump_utrs():
         utr5 = ""
         content = ""
         utr3 = ""
+        tail = 0
 
         for pair in pairs:
             if stage == 0:
@@ -159,12 +160,15 @@ def dump_utrs():
                 else:
                     stage = 1
             if stage == 1:
-                print(pair)
                 content += pair
                 if pair in ("tag", "tga", "taa"):
                     stage = 2
             elif stage == 2:
                 utr3 += pair
 
-#        print(f"utr5: {utr5}\ncontent: {content}\nutr3: {utr3}")
+        while utr3[-1] == "a":
+            utr3 = utr3[:-1]
+            tail += 1
+
+        print(f"utr5: {utr5}\ncontent: {content}\nutr3: {utr3}\ntail is {tail} A(s) long")
 modes["dump_utr"] = {"func": dump_utrs, "desc": "Dump utrs and content of mrna"}

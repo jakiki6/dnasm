@@ -18,5 +18,5 @@ OPCODES = {
     "snippet": database.snippet,
     "cap": basic.cap,
     "linker": basic.linker,
-    "iupac": basic.iupac,
+    "compressed": basic.compressed,
 }
