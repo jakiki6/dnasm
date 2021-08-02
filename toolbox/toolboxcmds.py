@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
 import database, utils
 sys.path = sys.path[:-1]
 sys.path.append(os.path.join(os.getcwd(), "..", "dnasm"))
-from constants import ACIDS
+from constants import ACIDS, IUPAC
 sys.path = sys.path[:-1]
 os.chdir(cwd)
 
@@ -165,7 +165,7 @@ def dump_utrs():
                         content += "atg"
             if stage == 1:
                 if (ptr + 3) >= len(fcontent):
-                    print("Corrupted pair in content part!")
+                    print("Unaligned pair in content part!")
                     return
                 pair = fcontent[ptr:ptr+3]
                 ptr += 3
@@ -198,3 +198,31 @@ def find_starts():
 
             ptr += 1
 modes["find-starts"] = {"func": find_starts, "desc": "Find starts and stops in raw material"}
+
+def huge_format():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as infile:
+        with open(outfn, "w") as outfile:
+            char = " "
+
+            while char != "":
+                char = infile.read(1).lower().replace("u", "t").replace("n", "a")
+
+                if char in "atgc":
+                    outfile.write(char)
+modes["huge-format"] = {"func": huge_format, "desc": "Format a huge file (like the human genome)"}
+
+def decompress():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as infile:
+        with open(outfn, "w") as outfile:
+            char = " "
+
+            while char != "":
+                char = infile.read(1)
+
+                if char in IUPAC.keys():
+                    outfile.write(IUPAC[char])
+modes["decompress"] = {"func": decompress, "desc": "Decompress protein code from IUPAC to raw"}
