@@ -17,7 +17,7 @@ def get_protein_by_id(line):
 
     for char in buf:
         try:
-            protein += constants.IUPAC[char]
+            protein += constants.IUPAC[char][0]
         except:
             logger.fatal(f"Invalid IUPAC char {char} in protein {protein_id}")
 

@@ -224,8 +224,37 @@ def decompress():
                 char = infile.read(1)
 
                 if char in IUPAC.keys():
-                    outfile.write(IUPAC[char])
+                    outfile.write(IUPAC[char][0])
 modes["decompress"] = {"func": decompress, "desc": "Decompress protein code from IUPAC to raw"}
+
+def compress():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    index = {}
+    for key, val in IUPAC.items():
+        for v in val:
+            index[v] = key
+
+    with open(infn, "r") as infile:
+        with open(outfn, "w") as outfile: 
+            pair = " "
+
+            while pair != "":
+                pair = ""
+                while len(pair) < 3:
+                    char = infile.read(1).lower()
+
+                    if char == "":
+                        break
+
+                    if char in "atcg":
+                        pair += char
+
+                try:
+                    outfile.write(index[pair])
+                except KeyError:
+                    outfile.write(pair)
+modes["compress"] = {"func": compress, "desc": "Compress protein code from raw to IUPAC"}
 
 def sign_dna():
     infn, outfn, keyfn = require(3, "<input file> <output file> <sign data>")

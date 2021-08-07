@@ -23,7 +23,7 @@ def acids(line):
     buf = ""
     for acid in res:
         if not acid in ACIDS.keys():
-            raise ValueError(char + " is not a valid amino acid!")
+            raise ValueError(acid + " is not a valid amino acid!")
         buf += ACIDS[acid][0]  
     return buf
 
@@ -47,5 +47,5 @@ def linker(line):
 def compressed(line):
     res = ""
     for char in "".join(line.args):
-        res += IUPAC[char]
+        res += IUPAC[char][0]
     return res

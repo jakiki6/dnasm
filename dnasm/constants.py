@@ -19,45 +19,48 @@ ACIDS = {
     "Trp": ["tgg"],
     "Tyr": ["tat", "tac"],
     "Val": ["gtt", "gtc", "gta", "gtg"],
-    "End": ["taa", "tag", "tga"],
-    "Start": ["atg"]
+    "Stop": ["taa", "tag", "tga"],
+    "Start": ["atg"],
+    "Any": ["nnn"]
 }
 
 IUPAC = {
-    "A": "gct",
-    "B": "gat",
-    "C": "tgt",
-    "D": "gat",
-    "E": "gaa",
-    "F": "ttt",
-    "G": "ggt",
-    "H": "cat",
-    "I": "att",
-    "K": "aaa",
-    "L": "tta",
-    "M": "atg", # start
-    "N": "cgt",
-    "O": "tag", # can be decoded as stop
-    "P": "cct",
-    "Q": "caa",
-    "R": "aga",
-    "S": "tct",
-    "T": "act",
-    "U": "tga", # can be decoded as stop
-    "V": "gtt",
-    "W": "tgg",
-    "Y": "tat",
-    "Z": "gaa",
-    "J": "ctt",
-    "X": "aaa",
-    "*": "taa", # safe stop since it will be decoded as stop by all cells
-    "-": "",
+    "A": ACIDS["Ala"],
+    "B": ACIDS["Asp"] + ACIDS["Asn"],
+    "C": ACIDS["Cys"],
+    "D": ACIDS["Asp"],
+    "E": ACIDS["Glu"],
+    "F": ACIDS["Phe"],
+    "G": ACIDS["Gly"],
+    "H": ACIDS["His"],
+    "I": ACIDS["Ile"],
+    "K": ACIDS["Lys"],
+    "L": ACIDS["Leu"],
+    "M": ACIDS["Start"],
+    "N": ACIDS["Asn"],
+    "O": ["tag"],
+    "P": ACIDS["Pro"],
+    "Q": ACIDS["Gln"],
+    "R": ACIDS["Arg"],
+    "S": ACIDS["Ser"],
+    "T": ACIDS["Thr"],
+    "U": ["tga"],
+    "V": ACIDS["Val"],
+    "W": ACIDS["Trp"],
+    "Y": ACIDS["Tyr"],
+    "Z": ACIDS["Glu"] + ACIDS["Gln"],
+    "J": ACIDS["Leu"],
+    "X": ACIDS["Any"],
+    "*": ACIDS["Stop"],
+    "-": [""],
+    ".": [""]
 }
 
 MAPPING = {
     "t": 0b00,
     "c": 0b01,
     "a": 0b10,
+    "n": 0b10,
     "g": 0b11,
     "u": 0b00,
 }

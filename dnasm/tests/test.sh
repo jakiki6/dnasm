@@ -40,7 +40,7 @@ echo -n atgtaa > tmp/ref.rna
 assemble
 
 echo -n Test 5: acids opcode ...\ 
-echo acids Start, Ala, End > tmp/test.asm
+echo acids Start, Ala, Stop > tmp/test.asm
 echo -n atggcttaa > tmp/ref.rna
 assemble
 

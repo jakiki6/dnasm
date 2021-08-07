@@ -64,6 +64,7 @@ logger.info(f"Output has a size of {fmtsize}.")
 
 if args.rna:
     result = result.replace("t", "u")
+result = result.replace("n", "a")
 
 if args.compress:
     buf = bytearray(math.ceil(len(result) / 4))
