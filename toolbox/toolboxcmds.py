@@ -1,4 +1,4 @@
-import sys, os, requests, random, re, textwrap
+import sys, os, requests, random, re, math
 cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
@@ -226,3 +226,60 @@ def decompress():
                 if char in IUPAC.keys():
                     outfile.write(IUPAC[char])
 modes["decompress"] = {"func": decompress, "desc": "Decompress protein code from IUPAC to raw"}
+
+def sign_dna():
+    infn, outfn, keyfn = require(3, "<input file> <output file> <sign data>")
+
+    with open(keyfn, "rb") as file:
+        k = 0
+        for i in file.read():
+            k = (k << 8) | i
+
+    with open(infn, "r") as file:
+        content = file.read()
+        scontent = ""
+
+    for i in range(0, len(content), 3):
+        pair = content[i:i+3]
+
+        for key, val in ACIDS.items():
+            if pair in val:
+                j = k % len(val)
+                k //= len(val)
+
+                scontent += val[j]
+
+                break
+
+    if k > 0:
+        print(f"Signature data is too large! {math.ceil(math.log(k, 256))} byte(s) too much")
+        exit(1)
+
+    with open(outfn, "w") as file:
+        file.write(scontent)
+modes["sign-dna"] = {"func": sign_dna, "desc": "Apply signature to dna"}
+
+def read_signature():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as file:
+        content = file.read()
+        k = 0
+        shift = 1
+
+    for i in range(0, len(content), 3):
+        pair = content[i:i+3]
+
+        for key, val in ACIDS.items():
+            if pair in val:
+                k = k + (shift * val.index(pair))
+                shift *= len(val)
+
+                break
+
+
+    rcontent = k.to_bytes(math.ceil(k.bit_length() / 8), "big")
+
+    with open(outfn, "wb") as file:
+        file.write(rcontent)
+modes["read-signature"] = {"func": read_signature, "desc": "Reads signature applied with sign-dna"}

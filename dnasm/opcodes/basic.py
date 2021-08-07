@@ -24,7 +24,7 @@ def acids(line):
     for acid in res:
         if not acid in ACIDS.keys():
             raise ValueError(char + " is not a valid amino acid!")
-        buf += ACIDS[acid]  
+        buf += ACIDS[acid][0]  
     return buf
 
 def tail(line):
