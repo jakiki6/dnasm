@@ -106,4 +106,4 @@ assemble
 
 rm -fr tmp
 
-echo Summary: $passed/$ran test were successful
+cowsay Summary: $passed/$ran test were successful

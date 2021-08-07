@@ -283,3 +283,34 @@ def read_signature():
     with open(outfn, "wb") as file:
         file.write(rcontent)
 modes["read-signature"] = {"func": read_signature, "desc": "Reads signature applied with sign-dna"}
+
+def find_paddings():
+    infn, _minl = require(2, "<input file> <minimal length>")
+    minl = int(_minl)
+
+    with open(infn, "r") as infile:
+        char = " "
+        streak = 0
+        regions = []
+        ptr = 0
+
+        while char != "":
+            char = infile.read(1)
+
+            if char.lower() == "a":
+                streak += 1
+            elif char.lower() in "tcg":
+                if streak >= minl:
+                    regions.append({
+                        "start": ptr - streak - 1,
+                        "end": ptr - 1,
+                        "length": streak
+                    })
+
+                streak = 0
+
+            ptr += 1
+
+        print(sorted(regions, key=lambda k: k["length"]))
+
+modes["find-paddings"] = {"func": find_paddings, "desc": "Find 'a' paddings in a huge file"}
