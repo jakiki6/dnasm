@@ -1,13 +1,6 @@
 import sys, os, requests, random, re, math
-cwd = os.getcwd()
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(os.path.join(os.getcwd(), "..", "lib"))
-import database, utils
-sys.path = sys.path[:-1]
-sys.path.append(os.path.join(os.getcwd(), "..", "dnasm"))
-from constants import ACIDS, IUPAC
-sys.path = sys.path[:-1]
-os.chdir(cwd)
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
+import database, utils, constants
 
 def require(num, usage):
     if len(sys.argv) - 2 != num:
@@ -101,7 +94,7 @@ def mutate_genome():
         for i in range(0, len(data), 3):
             trip = data[i:i+2]
             if random.randint(0, 99) < ratio:
-                for key, val in ACIDS.items():
+                for key, val in constants.ACIDS.items():
                     if trip in val:
                         trip = random.choice(val)
             mdata += trip
@@ -223,15 +216,15 @@ def decompress():
             while char != "":
                 char = infile.read(1)
 
-                if char in IUPAC.keys():
-                    outfile.write(IUPAC[char][0])
+                if char in constants.IUPAC.keys():
+                    outfile.write(constants.IUPAC[char][0])
 modes["decompress"] = {"func": decompress, "desc": "Decompress protein code from IUPAC to raw"}
 
 def compress():
     infn, outfn = require(2, "<input file> <output file>")
 
     index = {}
-    for key, val in IUPAC.items():
+    for key, val in constants.IUPAC.items():
         for v in val:
             index[v] = key
 
@@ -271,7 +264,7 @@ def sign_dna():
     for i in range(0, len(content), 3):
         pair = content[i:i+3]
 
-        for key, val in ACIDS.items():
+        for key, val in constants.ACIDS.items():
             if pair in val:
                 j = k % len(val)
                 k //= len(val)
@@ -299,7 +292,7 @@ def read_signature():
     for i in range(0, len(content), 3):
         pair = content[i:i+3]
 
-        for key, val in ACIDS.items():
+        for key, val in constants.ACIDS.items():
             if pair in val:
                 k = k + (shift * val.index(pair))
                 shift *= len(val)

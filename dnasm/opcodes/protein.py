@@ -1,11 +1,6 @@
-
 import sys, requests
-sys.path.append("../")
-import constants
-sys.path = sys.path[:-1]
 
 from __main__ import logger
-
 
 def get_protein_by_id(line):
     protein_id = line.args[0]

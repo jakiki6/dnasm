@@ -9,12 +9,13 @@ else:
 
 pwd = os.getcwd()
 home = os.path.dirname(os.path.realpath(__file__))
+libs = os.path.join(os.path.dirname(home), "lib")
 
-os.chdir(home)
+sys.path.append(home)
+sys.path.append(libs)
 
 import dnasmcore
-
-os.chdir(pwd)
+import constants
 
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
 parser.add_argument("input", nargs="?", type=str)

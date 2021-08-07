@@ -1,8 +1,4 @@
-import sys
-sys.path.append('../')
-from constants import *
-import utils
-sys.path = sys.path[:-1]
+import utils, constants
 
 def bases(line):
     res = "".join(line.args).lower()
@@ -13,18 +9,18 @@ def bases(line):
     return res.replace("u", "t").replace("ψ", "t")
 
 def start(line):
-    return "atg"
+    return constants.ACIDS["Start"][0]
 
 def end(line):
-    return "taa" # only safe end pair because the other 2 can be interpreted as acids
+    return constants.ACIDS["Stop"][0]
 
 def acids(line):
     res = line.args
     buf = ""
     for acid in res:
-        if not acid in ACIDS.keys():
+        if not acid in constants.ACIDS.keys():
             raise ValueError(acid + " is not a valid amino acid!")
-        buf += ACIDS[acid][0]  
+        buf += constants.ACIDS[acid][0]  
     return buf
 
 def tail(line):
@@ -47,5 +43,5 @@ def linker(line):
 def compressed(line):
     res = ""
     for char in "".join(line.args):
-        res += IUPAC[char][0]
+        res += constants.IUPAC[char][0]
     return res
