@@ -1,5 +1,7 @@
 import sys, requests
 
+import utils, constants
+
 from __main__ import logger
 
 def get_protein_by_id(line):
