@@ -1,4 +1,4 @@
-import sys, os, requests, random, re, math
+import sys, os, requests, random, re, math, json
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
 import database, utils, constants
 
@@ -336,3 +336,30 @@ def find_paddings():
         print(sorted(regions, key=lambda k: k["length"]))
 
 modes["find-paddings"] = {"func": find_paddings, "desc": "Find 'a' paddings in a huge file"}
+
+def collect_stats():
+    infn, = require(1, "<input file>")
+
+    with open(infn, "r") as infile:
+        stats = {
+            "bases": {
+                "a": 0,
+                "t": 0,
+                "c": 0,
+                "g": 0
+            }
+        }
+
+        while True:
+            char = infile.read(1).lower()
+
+            if char == "":
+                break
+
+            if not char in "atcg":
+                continue
+
+            stats["bases"][char] += 1
+
+    print(json.dumps(stats, indent=4))
+modes["collect-stats"] = {"func": collect_stats, "desc": "Collect statistics of dna"}
