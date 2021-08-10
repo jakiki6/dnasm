@@ -336,3 +336,32 @@ def find_paddings():
         print(sorted(regions, key=lambda k: k["length"]))
 
 modes["find-paddings"] = {"func": find_paddings, "desc": "Find 'a' paddings in a huge file"}
+
+def find_pattern():
+    pfn, infn = require(2, "<pattern filename> <input file>")
+
+    with open(pfn, "r") as pfile:
+        pattern = ""
+        for char in pfile.read():
+            if char in "atgc":
+                pattern += char
+        streak = 0
+        index = 0
+
+    with open(infn, "r") as infile:
+        char = " "
+
+        while char != "":
+            char = infile.read(1)
+
+            if char == pattern[streak]:
+                streak += 1
+
+                if streak == len(pattern):
+                    print(index)
+                    streak = 0
+                    index += len(pattern)
+            else:
+                streak = 0
+                index += 1
+modes["find-pattern"] = {"func": find_pattern, "desc": "Find specific pattern in huge file"}
