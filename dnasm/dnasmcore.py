@@ -2,9 +2,10 @@ import sys
 import utils, opcodes
 
 class OpCode(object):
-    def __init__(self, opcode, args):
+    def __init__(self, opcode, args, line):
         self.opcode = opcode
         self.args = args
+        self.line = line
     def __str__(self):
         return f"OpCode(opcode='{self.opcode}', args={self.args})"
     def __repr__(self):
@@ -28,7 +29,9 @@ def parse(text):
     opcodes = []
     lline = ""
     is_escape = False
+    lindex = 0
     for line in text.split("\n"):
+        lindex += 1
         if is_escape:
             line = lline + line
             is_escape = False
@@ -42,7 +45,7 @@ def parse(text):
             lline = line[:-1]
         else:
             line = line.split(" ")
-            data = OpCode(line[0], line[1:])
+            data = OpCode(line[0], line[1:], lindex)
             opcodes.append(data)
     return opcodes
 
@@ -62,24 +65,32 @@ def merge(data):
 
 def preprocess(data):
     for index, line in enumerate(data):
-        if line.opcode == "times":
-            num = utils.req_int(line.args[0])
-            nline = utils.shift_line(line, 2)
-            for i in range(0, num):
-                data.insert(index, nline)
-            data.remove(line)
-            preprocess(data)
-            break
+        try:
+            if line.opcode == "times":
+                num = utils.req_int(line.args[0])
+                nline = utils.shift_line(line, 2)
+                for i in range(0, num):
+                    data.insert(index, nline)
+                data.remove(line)
+                preprocess(data)
+                break
+        except Exception as e:
+            print(f"error in line {line.line}: {e}")
+            exit(1)
 
 def run(data):
     rna = ""
     for line in data:
-        rna += opcodes.run(line)
+        try:
+            rna += opcodes.run(line)
+        except Exception as e:
+            print(f"error in line {line.line}: {e}")
+            exit(1)
     return rna
 
 def process(text):
     data = parse(text)
     merge(data)
     preprocess(data)
-    rna = run(data)
+    rna = run(data) 
     return rna

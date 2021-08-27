@@ -4,7 +4,7 @@ def run(line):
     if line.opcode in OPCODES.keys():
         return OPCODES[line.opcode](line)
     else:
-        return ""
+        raise ValueError(f"Unknown opcode '{line.opcode}' with arguments {line.args}")
 
 OPCODES = {
     "bases": basic.bases,
