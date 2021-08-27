@@ -206,7 +206,7 @@ def huge_format():
                     outfile.write(char)
 modes["huge-format"] = {"func": huge_format, "desc": "Format a huge file (like the human genome)"}
 
-def decompress():
+def decompress_iupac():
     infn, outfn = require(2, "<input file> <output file>")
 
     with open(infn, "r") as infile:
@@ -218,9 +218,9 @@ def decompress():
 
                 if char in constants.IUPAC.keys():
                     outfile.write(constants.IUPAC[char][0])
-modes["decompress"] = {"func": decompress, "desc": "Decompress protein code from IUPAC to raw"}
+modes["decompress-iupac"] = {"func": decompress_iupac, "desc": "Decompress protein code from IUPAC to raw"}
 
-def compress():
+def compress_iupac():
     infn, outfn = require(2, "<input file> <output file>")
 
     index = {}
@@ -247,7 +247,7 @@ def compress():
                     outfile.write(index[pair])
                 except KeyError:
                     outfile.write(pair)
-modes["compress"] = {"func": compress, "desc": "Compress protein code from raw to IUPAC"}
+modes["compress-iupac"] = {"func": compress_iupac, "desc": "Compress protein code from raw to IUPAC"}
 
 def sign_dna():
     infn, outfn, keyfn = require(3, "<input file> <output file> <sign data>")
@@ -392,3 +392,51 @@ def collect_stats():
 
     print(json.dumps(stats, indent=4))
 modes["collect-stats"] = {"func": collect_stats, "desc": "Collect statistics of dna"}
+
+def compress():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as inf:
+        with open(outfn, "wb") as outf:
+            b = 0
+            read = 0
+    
+            while True:
+                char = inf.read(1)
+                if not char in "atcg":
+                    continue
+                if char == "":
+                    if read != 0:
+                        outf.write(bytes([b << (2 * (4 - read))]))
+                    break
+                    
+
+                b <<= 2
+                b |= constants.MAPPING[char]
+                read += 1
+
+                if read == 4:
+                    outf.write(bytes([b]))
+
+                    b = 0
+                    read = 0
+modes["compress"] = {"func": compress, "desc": "Compress dna"}
+
+def decompress():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "rb") as inf:
+        with open(outfn, "w") as outf:
+            while True:
+                char = inf.read(1)
+                if char == b"":
+                    break
+                b = char[0]
+
+                s = ""
+                for i in range(0, 4):
+                    s += constants.RMAPPING[b & 0b11]
+                    b >>= 2
+
+                outf.write(s[::-1])
+modes["decompress"] = {"func": decompress, "desc": "Decompress dna"}
