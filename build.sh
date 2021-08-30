@@ -32,6 +32,7 @@ rm -fr usr/share/dnasm/database/.git
 rm usr/share/dnasm/database/LICENSE
 mkdir usr/bin
 ln -s /opt/dnasm/dnasm/dnasm.py usr/bin/dnasm
+ln -s /opt/dnasm/dnasm/dnash.py usr/bin/dnash
 ln -s /opt/dnasm/toolbox/toolbox.py usr/bin/toolbox
 
 cd ..

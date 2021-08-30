@@ -6,7 +6,7 @@ import database
 sys.path = sys.path[:-1]
 os.chdir(cwd)
 
-def snippet(line):
+def snippet(line, raw):
     cid = line.args[0]
 
     return database.get_full_object(cid).decode()

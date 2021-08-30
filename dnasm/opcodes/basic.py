@@ -1,6 +1,6 @@
 import utils, constants
 
-def bases(line):
+def bases(line, rna):
     res = "".join(line.args).lower()
     buf = ""
     for char in res:
@@ -8,13 +8,13 @@ def bases(line):
             raise ValueError(char + " is not a valid base!")
     return res.replace("u", "t").replace("ψ", "t")
 
-def start(line):
+def start(line, rna):
     return constants.ACIDS["Start"][0]
 
-def end(line):
+def end(line, rna):
     return constants.ACIDS["Stop"][0]
 
-def acids(line):
+def acids(line, rna):
     res = line.args
     buf = ""
     for acid in res:
@@ -23,25 +23,35 @@ def acids(line):
         buf += constants.ACIDS[acid][0]  
     return buf
 
-def tail(line):
-    i = utils.req_int(line.args[0])
-    return "a" * i
+def pad(line, rna):
+    if len(line.args) < 1:
+        raise ValueError("Missing value")
 
-def pad(line):
     res = utils.req_int(line.args[0])
     if res < 0:
         print("Negative value on padding")
         res = 0
     return "a" * res
 
-def cap(line):
+tail = pad
+
+def cap(line, rna):
     return "ga"
 
-def linker(line):
+def linker(line, rna):
     return "gcatatgact"
 
-def compressed(line):
+def compressed(line, rna):
     res = ""
     for char in "".join(line.args):
         res += constants.IUPAC[char][0]
     return res
+
+def align(line, rna):
+    if len(line.args) < 1:
+        raise ValueError("Missing value")
+
+    i = utils.req_int(line.args[0]) - len(rna)
+    if i < 0:
+        raise ValueError(f"value {i} is smaller than 0")
+    return "a" * i

@@ -1,17 +1,17 @@
 from . import basic, protein, database
 
-def run(line):
+def run(line, rna):
     if line.opcode in OPCODES.keys():
-        return OPCODES[line.opcode](line)
+        return OPCODES[line.opcode](line, rna)
     else:
-        raise ValueError(f"Unknown opcode '{line.opcode}' with arguments {line.args}")
+        raise ValueError(f"Unknown opcode '{line.opcode}'")
 
 OPCODES = {
     "bases": basic.bases,
     "start": basic.start,
     "end": basic.end,
     "acids": basic.acids,
-    "nop": lambda x: "",
+    "nop": lambda x, y: "",
     "protein_db": protein.get_protein_by_id,
     "tail": basic.tail,
     "pad": basic.pad,
@@ -19,4 +19,5 @@ OPCODES = {
     "cap": basic.cap,
     "linker": basic.linker,
     "compressed": basic.compressed,
+    "align": basic.align
 }

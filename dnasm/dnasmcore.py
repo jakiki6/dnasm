@@ -76,16 +76,16 @@ def preprocess(data):
                 break
         except Exception as e:
             print(f"error in line {line.line}: {e}")
-            exit(1)
+            sys.exit(1)
 
 def run(data):
     rna = ""
     for line in data:
         try:
-            rna += opcodes.run(line)
+            rna += opcodes.run(line, rna)
         except Exception as e:
             print(f"error in line {line.line}: {e}")
-            exit(1)
+            sys.exit(1)
     return rna
 
 def process(text):
