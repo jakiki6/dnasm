@@ -440,3 +440,19 @@ def decompress():
 
                 outf.write(s[::-1])
 modes["decompress"] = {"func": decompress, "desc": "Decompress dna"}
+
+def complement():
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as inf:
+        with open(outfn, "w") as outf:
+            while True:
+                char = inf.read(1).lower().strip()
+                if char == "":
+                    break
+
+                if not char in "atgc":
+                    continue
+
+                outf.write(constants.COMPLEMENT[char])
+modes["complement"] = {"func": complement, "desc": "Convert dna into its complement form"}

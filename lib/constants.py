@@ -72,3 +72,10 @@ RMAPPING = {
     0b10: "t",
     0b11: "g"
 }
+
+COMPLEMENT = {
+    "a": "t",
+    "t": "a",
+    "c": "g",
+    "g": "c"
+}

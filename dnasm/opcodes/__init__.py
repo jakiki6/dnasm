@@ -19,5 +19,6 @@ OPCODES = {
     "cap": basic.cap,
     "linker": basic.linker,
     "compressed": basic.compressed,
-    "align": basic.align
+    "align": basic.align,
+    "point": lambda x, y: ""
 }
