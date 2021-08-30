@@ -68,10 +68,10 @@ while running:
             running = False
             break
         elif line.strip() == "help":
-            print("Use 'exit' to exit and 'help' for displaying this help\nAvailable opcodes:")
+            print("Use 'exit' to exit and 'help' to display this help\nAvailable opcodes:")
             for opcode in opcodes.OPCODES.keys():
                 print(f"\t{opcode}")
-            print("Lines can be comined with ':'\ne.g. 'bases gcc : align 8' -> 'gccaaaaa'", end="")
+            print("Lines can be combined with ':'\ne.g. 'bases gcc : align 8' -> 'gccaaaaa'", end="")
         else:
             code += line + "\n"
 
