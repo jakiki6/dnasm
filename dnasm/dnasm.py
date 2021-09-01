@@ -20,7 +20,6 @@ import constants
 parser = argparse.ArgumentParser(description='RNA/DNA assembler')
 parser.add_argument("input", nargs="?", type=str)
 parser.add_argument("--output", "-o", type=str, default="/dev/stdout")
-parser.add_argument("--manual", "-m", help="display manual", action="store_true")
 parser.add_argument("--compress", "-c", help="compress genom in smaller data (4 bases per byte)", action="store_true")
 parser.add_argument("--rna", "-r", help="convert it to rna (replaces t with u)", action="store_true")
 parser.add_argument("--version", "-v", help="print version", action="store_true")
@@ -32,11 +31,6 @@ if args.version:
 
 if not args.input:
     parser.print_help()
-    exit()
-
-if args.manual:
-    os.chdir(home)
-    os.system("less manual.txt")
     exit()
 
 with open(args.input, "r") as file:
