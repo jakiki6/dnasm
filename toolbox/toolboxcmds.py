@@ -457,7 +457,7 @@ def complement():
 modes["complement"] = {"func": complement, "desc": "Convert dna into its complement form"}
 
 def analyse_entropy():
-    infn, mode = require(2, "<input file> <mode>")
+    mode, infn = require(2, "<mode> <input file>")
 
     if not mode in ("g", "graph", "c", "console", "r", "raw"):
         print("Not a valid mode: specify one of 'graph', 'console' or 'raw' or their first letter")
@@ -465,17 +465,24 @@ def analyse_entropy():
 
     entropies = []
     with open(infn, "r") as infile:
-        infile.seek(0, 2)
-        chunk_size = infile.tell() // 1024
-        infile.seek(0)
+        if infn.endswith(".json"):
+            entropies = json.load(infile)
+        else:
+            infile.seek(0, 2)
+            chunk_size = infile.tell() // 1024
+            infile.seek(0)
 
-        while True:
-            chunk = infile.read(chunk_size)
-            if len(chunk) == 0:
-                break
+            print(f"Using a chunk size of {chunk_size}", file=sys.stderr)
 
-            entropy = utils.get_entropy(chunk)
-            entropies.append(entropy)
+            while True:
+                chunk = infile.read(chunk_size)
+                if len(chunk) == 0:
+                    break
+
+                entropy = utils.get_entropy(chunk)
+                entropies.append(entropy)
+
+                print(f"{len(entropies) / 1024 * 1000 // 1 / 10}%", file=sys.stderr)
 
     if mode in ("g", "graph"):
         import matplotlib.pyplot as plt
