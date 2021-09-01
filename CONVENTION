@@ -1,0 +1,3 @@
+- indexes in dna/rna start at 0
+- data is dna with only a, t, c and g
+- order of bases: a, t, c and g

@@ -88,7 +88,7 @@ def mutate_genome():
     if mode == "randomly":
         for char in data:
             if random.randint(0, 99) < ratio:
-                char = random.choice("tcag")
+                char = random.choice("atcg")
             mdata += char
     elif mode == "safe":
         for i in range(0, len(data), 3):
@@ -129,7 +129,7 @@ modes["find-promoter-bacteria"] = {"func": find_promoter_bacteria, "desc": "Find
 def generate_random_dna():
     try:
         for i in range(0, int(require(1, "<amount>")[0])):
-            print(random.choice("actg"), end="")
+            print(random.choice("atcg"), end="")
     except ValueError:
         print("Not a valid amount", file=sys.stderr)
 modes["generate-random-dna"] = {"func": generate_random_dna, "desc": "generates random dna"}
@@ -202,7 +202,7 @@ def huge_format():
             while char != "":
                 char = infile.read(1).lower().replace("u", "t").replace("n", "a")
 
-                if char in "atgc":
+                if char in "atcg":
                     outfile.write(char)
 modes["huge-format"] = {"func": huge_format, "desc": "Format a huge file (like the human genome)"}
 
@@ -299,7 +299,6 @@ def read_signature():
 
                 break
 
-
     rcontent = k.to_bytes(math.ceil(k.bit_length() / 8), "big")
 
     with open(outfn, "wb") as file:
@@ -343,7 +342,7 @@ def find_pattern():
     with open(pfn, "r") as pfile:
         pattern = ""
         for char in pfile.read():
-            if char in "atgc":
+            if char in "atcg":
                 pattern += char
         streak = 0
         index = 0
@@ -451,8 +450,59 @@ def complement():
                 if char == "":
                     break
 
-                if not char in "atgc":
+                if not char in "atcg":
                     continue
 
                 outf.write(constants.COMPLEMENT[char])
 modes["complement"] = {"func": complement, "desc": "Convert dna into its complement form"}
+
+def analyse_entropy():
+    infn, mode = require(2, "<input file> <mode>")
+
+    if not mode in ("g", "graph", "c", "console", "r", "raw"):
+        print("Not a valid mode: specify one of 'graph', 'console' or 'raw' or their first letter")
+        return
+
+    entropies = []
+    with open(infn, "r") as infile:
+        infile.seek(0, 2)
+        chunk_size = infile.tell() // 1024
+        infile.seek(0)
+
+        while True:
+            chunk = infile.read(chunk_size)
+            if len(chunk) == 0:
+                break
+
+            entropy = utils.get_entropy(chunk)
+            entropies.append(entropy)
+
+    if mode in ("g", "graph"):
+        import matplotlib.pyplot as plt
+
+        plt.plot(entropies)
+        plt.show()
+    elif mode in ("c", "console"):
+        size = os.get_terminal_size().columns
+        bar_size = os.get_terminal_size().lines - 5
+        entropies = utils.resize(entropies, size)
+        heights = [[] for _ in range(0, bar_size)]
+
+        for i in range(0, len(entropies)):
+            h = math.floor(entropies[i] * bar_size)
+
+            while h:
+                heights[h].append(i)
+                h -= 1
+
+        for hs in heights[::-1]:
+            line = [" " for _ in range(0, size)]
+
+            for h in hs:
+                line[h] = "#"
+
+            print("".join(line))
+    elif mode in ("r", "raw"):
+        print(entropies)
+            
+modes["analyse-entropy"] = {"func": analyse_entropy, "desc": "Analyse the entropy of dna"}

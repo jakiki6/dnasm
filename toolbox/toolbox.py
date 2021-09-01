@@ -12,8 +12,10 @@ def usage():
             print(f"\t\t{line}")
 
 try:
-    modes[sys.argv[1]]["func"]()
+    func = modes[sys.argv[1]]["func"]
 except KeyError:
     usage()
 except IndexError:
     usage()
+
+func()
