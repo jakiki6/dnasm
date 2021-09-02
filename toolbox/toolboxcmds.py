@@ -469,7 +469,8 @@ def analyse_entropy():
             entropies = json.load(infile)
         else:
             infile.seek(0, 2)
-            chunk_size = infile.tell() // 1024
+            fs = infile.tell()
+            chunk_size = fs // 1024
             infile.seek(0)
 
             print(f"Using a chunk size of {chunk_size}", file=sys.stderr)
@@ -482,12 +483,13 @@ def analyse_entropy():
                 entropy = utils.get_entropy(chunk)
                 entropies.append(entropy)
 
-                print(f"{len(entropies) / 1024 * 1000 // 1 / 10}%", file=sys.stderr)
+                if len(entropies) % 1000 == 0:
+                    print(f"{len(entropies) / (fs / chunk_size) * 1000 // 1 / 10}%", file=sys.stderr)
 
     if mode in ("g", "graph"):
         import matplotlib.pyplot as plt
 
-        plt.plot(entropies)
+        plt.plot(entropies, linewidth=0.2)
         plt.show()
     elif mode in ("c", "console"):
         size = os.get_terminal_size().columns
