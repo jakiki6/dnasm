@@ -515,3 +515,52 @@ def analyse_entropy():
         print(entropies)
             
 modes["analyse-entropy"] = {"func": analyse_entropy, "desc": "Analyse the entropy of dna"}
+
+def to_image():
+    from PIL import Image
+
+    infn, outfn = require(2, "<input file> <output file>")
+
+    with open(infn, "r") as infile:
+        infile.seek(0, 2)
+        size = math.ceil(infile.tell() / 12)
+        infile.seek(0)
+
+        ratio = math.ceil(math.sqrt(size))
+        print(f"Image will be {ratio}x{ratio} pixels with {size} pixels")
+
+        pixels = []
+        while True:
+            line = infile.read(12)
+
+            if len(line) == 0:
+                break
+            while len(line) < 32:
+                line += "a"
+
+            num = 0
+            for char in line[::-1]:
+                num <<= 2
+                num |= constants.MAPPING[char]
+
+            color = []
+            for _ in range(0, 3):
+                color.append(num % 256)
+                num //= 256
+
+            pixels.append(tuple(color))
+
+        pixels.reverse()
+
+        img = Image.new("RGB", (ratio, ratio), color="black")
+        for y in range(0, ratio):
+            for x in range(0, ratio):
+                try:
+                    img.putpixel((x, y), pixels.pop())
+                except IndexError:
+                    break
+
+        img.save(outfn)
+
+
+modes["to-image"] = {"func": to_image, "desc": "Convert dna into an image"}
