@@ -15,7 +15,9 @@ try:
     func = modes[sys.argv[1]]["func"]
 except KeyError:
     usage()
+    exit(1)
 except IndexError:
     usage()
+    exit(1)
 
 func()
