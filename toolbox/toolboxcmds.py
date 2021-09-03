@@ -121,7 +121,7 @@ def find_promoter_bacteria():
                 nmatches += 1
                 print(f"{match.start()} {match.end()} {match.group()}")
 
-            print(f"{nmatches} matches")
+            print(f"{nmatches} matche(s)")
     except FileNotFoundError:
         print(f"Not a file!")
 modes["find-promoter-bacteria"] = {"func": find_promoter_bacteria, "desc": "Finds promoter from bacteria for potential genes"}

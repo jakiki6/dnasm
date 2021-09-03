@@ -113,7 +113,7 @@ assemble
 echo Test 16: snippet database
 echo -n "  1. from local database ... "
 echo snippet 001cee75e7265a50f646b1bbf527ef652b0bbdc1a65d55463647e7adf8ba708a9f > tmp/test.asm
-cp ../../data/sarscov2.rna tmp/ref.rna &> /dev/null
+cp ../../data/sarscov2.dna tmp/ref.rna &> /dev/null
 assemble
 
 rm -fr tmp
