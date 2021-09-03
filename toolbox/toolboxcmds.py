@@ -337,15 +337,9 @@ def find_paddings():
 modes["find-paddings"] = {"func": find_paddings, "desc": "Find 'a' paddings in a huge file"}
 
 def find_pattern():
-    pfn, infn = require(2, "<pattern filename> <input file>")
-
-    with open(pfn, "r") as pfile:
-        pattern = ""
-        for char in pfile.read():
-            if char in "atcg":
-                pattern += char
-        streak = 0
-        index = 0
+    pattern, infn = require(2, "<pattern> <input file>")
+    streak = 0
+    index = 0
 
     with open(infn, "r") as infile:
         char = " "
