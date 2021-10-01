@@ -149,8 +149,11 @@ def dump_utrs():
 
         while ptr < len(fcontent):
             if stage == 0:
-                utr5 += fcontent[ptr]
-                ptr += 1
+                if (ptr + 3) >= len(fcontent):
+                    print("Unaligned pair in utr5 part!")
+                    return
+                utr5 += fcontent[ptr:ptr+3]
+                ptr += 3
                 if len(utr5) >= 3:
                     if utr5.endswith("atg"):
                         stage = 1
@@ -555,6 +558,4 @@ def to_image():
                     break
 
         img.save(outfn)
-
-
 modes["to-image"] = {"func": to_image, "desc": "Convert dna into an image"}
