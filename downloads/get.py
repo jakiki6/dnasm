@@ -45,7 +45,7 @@ def human_genome():
     base = "http://hgdownload.cse.ucsc.edu/goldenpath/hg19/chromosomes/chr{}.fa.gz"
 
     links = {}
-    for i in range(1, 22):
+    for i in range(1, 23):
         links[f"chr{i}.dna"] = base.format(i)
     links["chrX.dna"] = base.format("X")
     links["chrY.dna"] = base.format("Y")

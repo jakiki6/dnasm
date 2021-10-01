@@ -3,10 +3,10 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
 import database, utils, constants
 
 def require(num, usage):
-    if len(sys.argv) - 2 != num:
+    if len(sys.argv) - 2 < num:
         print(sys.argv[0], sys.argv[1], usage)
         exit(1)
-    return sys.argv[2:]
+    return sys.argv[2:2+num]
 
 def get_file_content(file, mode="r"):
     try:
@@ -454,10 +454,10 @@ def complement():
 modes["complement"] = {"func": complement, "desc": "Convert dna into its complement form"}
 
 def analyse_entropy():
-    mode, infn = require(2, "<mode> <input file>")
+    mode, infn = require(2, "<mode> <input file> [<output file>]")
 
-    if not mode in ("g", "graph", "c", "console", "r", "raw"):
-        print("Not a valid mode: specify one of 'graph', 'console' or 'raw' or their first letter")
+    if not mode in ("g", "graph", "i", "image", "c", "console", "r", "raw"):
+        print("Not a valid mode: specify one of 'graph', 'image', 'console' or 'raw' or their first letter")
         return
 
     entropies = []
@@ -486,8 +486,17 @@ def analyse_entropy():
     if mode in ("g", "graph"):
         import matplotlib.pyplot as plt
 
-        plt.plot(entropies, linewidth=0.2)
+        plt.title(infn)
+        plt.plot(entropies, linewidth=0.6)
         plt.show()
+    if mode in ("i", "image"):
+        _, infn, outfn = require(3, "image <input file> <output file>")
+
+        import matplotlib.pyplot as plt
+
+        plt.title(infn)
+        plt.plot(entropies, linewidth=0.6)
+        plt.savefig(outfn)
     elif mode in ("c", "console"):
         size = os.get_terminal_size().columns
         bar_size = os.get_terminal_size().lines - 5
