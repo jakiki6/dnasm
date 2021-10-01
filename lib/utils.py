@@ -66,3 +66,19 @@ def resize(ilist, tsize):
             rlist.append(sum(val) / len(val))
 
         return rlist
+
+def strip_fasta(data):
+    cdata = ""
+
+    for line in data.split("\n"):
+        if line.startswith(";") or line.startswith(">"):
+            continue
+
+        for char in line.lower():
+            if char == "n":
+                char = "a"
+
+            if char in "atcg":
+                cdata += char
+
+    return cdata
