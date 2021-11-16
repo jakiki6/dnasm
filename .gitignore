@@ -11,3 +11,9 @@ build/*
 # downloads
 downloads/*
 !downloads/get.py
+
+# native
+native/*
+!native/*.c
+!native/*.h
+!native/Makefile
