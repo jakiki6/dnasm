@@ -38,6 +38,10 @@ def fetch(url):
         print(f"Encountered a decoding issue while fetching '{url}'")
         exit(1)
 
+def fetch_nuccore(id):
+    return fetch(f"https://www.ncbi.nlm.nih.gov/nuccore/{id}?report=fasta&log$=seqview&format=text")
+        
+
 modes = {}
 
 def human_genome():
@@ -50,6 +54,9 @@ def human_genome():
     links["chrX.dna"] = base.format("X")
     links["chrY.dna"] = base.format("Y")
 
+    if not os.path.isdir("human"):
+        os.mkdir("human")
+
     for fn, link in links.items():
         print(f"Downloading {fn}...")
         data = fetch_bin(link)
@@ -60,9 +67,26 @@ def human_genome():
         print(f"Stripping {fn}...")
         data = utils.strip_fasta(data.decode())
 
-        with open(fn, "w") as file:
+        with open(os.path.join("human", fn), "w") as file:
             file.write(data)
 modes["human-genome"] = {"func": human_genome, "desc": "Downloads all human chromosomes"}
+
+def cat_genome():
+    links = {"a1": "CM001378.3", "a2": "CM001379.3", "a3": "CM001380.3", "b1": "CM001381.3", "b2": "CM001382.3", "b3": "CM001383.3",  "b4": "CM001384.3", "c1": "CM001385.3",  "c2": "CM001386.3", "d1": "CM001387.3",  "d2": "CM001388.3",  "d3": "CM001389.3",  "d4": "CM001390.3", "e1": "CM001391.3", "e2": "CM001392.3", "e3": "CM001393.3", "f1": "CM001394.3",  "f2": "CM001395.3", "x": "CM001396.3"}
+
+    if not os.path.isdir("cat"):
+        os.mkdir("cat")
+
+    for fn, link in links.items():
+        print(f"Downloading {fn}...")
+        data = fetch_nuccore(link)
+
+        print(f"Stripping {fn}...")
+        data = utils.strip_fasta(data)
+
+        with open(f"cat/chr{fn.upper()}.dna", "w") as file:
+            file.write(data)
+modes["cat-genome"] = {"func": cat_genome, "desc": "Downloads all chromosomes of a cat (felis catus to be precise)"}
 
 def usage():
     print(sys.argv[0], "<mode>")

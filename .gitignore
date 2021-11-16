@@ -10,5 +10,4 @@ build/*
 
 # downloads
 downloads/*
-!downloads/.gitkeep
 !downloads/get.py
