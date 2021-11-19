@@ -13,8 +13,8 @@ function assemble() {
 	python3 ../dnasm.py tmp/test.asm -o tmp/test.rna && \
 	cmp --silent tmp/test.rna tmp/ref.rna && \
 	passed=$((passed + 1)) && \
-	echo Passed || (
-		echo Failed
+	echo \ Passed || (
+		echo \ Failed
 #		echo Expected $(cat tmp/ref.rna) and got $(cat tmp/test.rna)
 	)
 }
@@ -72,23 +72,28 @@ echo compressed MT* > tmp/test.asm
 echo -n atgacttaa > tmp/ref.rna
 assemble
 
-echo -n Test 11: AAV ... 
+echo -n Test 11: sig opcode ...
+echo sig Hello > tmp/test.asm
+echo -n acatttctagctagctggct > tmp/ref.rna
+assemble
+
+echo -n Test 12: AAV ... 
 cat ../../shared/examples/aav.asm > tmp/test.asm &> /dev/null
 python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
-echo -n Test 12: Sars-CoV-2 ... 
+echo -n Test 13: Sars-CoV-2 ... 
 cat ../../shared/examples/sarscov2.asm > tmp/test.asm &> /dev/null
 python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
-echo -n Test 13: Sars-CoV-2 vaccine ... 
+echo -n Test 14: Sars-CoV-2 vaccine ... 
 cat ../../shared/examples/vaccine.asm > tmp/test.asm &> /dev/null
 python3 ../dnasm.py tmp/test.asm -o tmp/ref.rna > /dev/null
 assemble
 
 if (ping -c 1 8.8.8.8 > /dev/null); then
-	echo -n Test 14: Protein loading system ... 
+	echo -n Test 15: Protein loading system ... 
 	echo protein_db WP_001149592.1 > tmp/test.asm # I don't have that protein :(
 	echo -n > tmp/ref.rna
 	ran=$((ran + 1))
@@ -98,19 +103,19 @@ if (ping -c 1 8.8.8.8 > /dev/null); then
 		echo Passed && \
 		passed=$((passed + 1))
 else
-	echo Skipping test 14 because we have no internet connection
+	echo Skipping test 15 because we have no internet connection
 	ran=$((ran + 1))
 	passed=$((passed + 1))
 fi
 
-echo -n Test 15: Including test ... 
+echo -n Test 16: Including test ... 
 echo start > tmp/test.asm
 echo %include tmp/test2.asm >> tmp/test.asm
 echo end > tmp/test2.asm
 echo -n atgtaa > tmp/ref.rna
 assemble
 
-echo Test 16: snippet database
+echo Test 17: snippet database
 echo -n "  1. from local database ... "
 echo snippet 001cee75e7265a50f646b1bbf527ef652b0bbdc1a65d55463647e7adf8ba708a9f > tmp/test.asm
 cp ../../data/sarscov2.dna tmp/ref.rna &> /dev/null

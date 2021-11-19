@@ -4,7 +4,7 @@
 #include <string.h>
 #include <limits.h>
 
-#define BLOCK_SIZE 65536
+#define BLOCK_SIZE (1 << 20)
 
 double entropy = 0.0f;
 long length = 0;

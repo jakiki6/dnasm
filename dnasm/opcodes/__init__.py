@@ -20,5 +20,6 @@ OPCODES = {
     "linker": basic.linker,
     "compressed": basic.compressed,
     "align": basic.align,
-    "point": lambda x, y: ""
+    "point": lambda x, y: "",
+    "sig": basic.sig
 }

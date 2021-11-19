@@ -55,3 +55,13 @@ def align(line, rna):
     if i < 0:
         raise ValueError(f"value {i} is smaller than 0")
     return "a" * i
+
+def sig(line, rna):
+    i = int.from_bytes(line.args[0].encode(), "little")
+    res = ""
+
+    for _ in range(0, len(line.args[0]) * 4):
+        res += constants.RMAPPING[i & 0b11]
+        i >>= 2
+
+    return res
