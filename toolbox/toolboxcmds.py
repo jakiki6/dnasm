@@ -470,18 +470,37 @@ def analyse_entropy():
             chunk_size = fs // 1024
             infile.seek(0)
 
+            ptr = 0
+
             print(f"Using a chunk size of {chunk_size}", file=sys.stderr)
+            has_native = utils.has_native("entropy") and fs > 100000000
 
-            while True:
-                chunk = infile.read(chunk_size)
-                if len(chunk) == 0:
-                    break
+            while (ptr + chunk_size) < fs:
+                entropy = -1
 
-                entropy = utils.get_entropy(chunk)
+                if has_native:
+                    res, suc = utils.call_native("entropy", [infn, str(ptr), str(ptr + chunk_size)])
+                    if suc:
+                        try:
+                            entropy = float(res)
+                        except:
+                            pass
+
+                if entropy == -1:
+                    chunk = infile.read(chunk_size)
+                    if len(chunk) == 0:
+                        break
+
+                    entropy = utils.get_entropy(chunk)
+                else:
+                    infile.seek(infile.tell() + chunk_size)
+
                 entropies.append(entropy)
 
                 if len(entropies) % 1000 == 0:
                     print(f"{len(entropies) / (fs / chunk_size) * 1000 // 1 / 10}%", file=sys.stderr)
+
+                ptr += chunk_size
 
     if mode in ("g", "graph"):
         import matplotlib.pyplot as plt

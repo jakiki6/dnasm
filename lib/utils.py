@@ -1,4 +1,6 @@
-import math
+import math, subprocess, os
+
+debug = "DEBUG" in os.environ
 
 def tabs2dict(buf):
     _buf = buf.split("\n")
@@ -82,3 +84,31 @@ def strip_fasta(data):
                 cdata += char
 
     return cdata
+
+def get_native_dir():
+    return os.path.join(os.path.dirname(__file__), "..", "native")
+
+def get_native_binary(name):
+    return os.path.join(get_native_dir(), name)
+
+def has_native(name):
+    if "NONATIVE" in os.environ:
+        return False
+
+    binary = get_native_binary(name)
+    return os.path.isfile(binary) or os.path.islink(binary)
+
+def call_native(name, args):
+    binary = get_native_binary(name)
+
+    if debug:
+        print(" ".join([binary, *args]))
+
+    if not has_native(name):
+        return b"", False
+
+    proc = subprocess.run([binary, *args], stdout=subprocess.PIPE)
+    if proc.returncode != 0:
+        return b"", False
+
+    return proc.stdout.decode(), True

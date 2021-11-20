@@ -37,7 +37,14 @@ int main(int argc, char *argv[]) {
 	fseek(fptr, start, SEEK_SET);
 
 	while (1) {
-		int read = fread(&block, 1, sizeof(block), fptr);
+		int read;
+
+		if (to_read > sizeof(block)) {
+			read = fread(&block, 1, sizeof(block), fptr);
+		} else {
+			read = fread(&block, 1, to_read, fptr);
+		}
+
 		length = length + read;
 
 		if (read == 0 || to_read == 0) {
@@ -45,6 +52,10 @@ int main(int argc, char *argv[]) {
 		}
 
 		for (int i = 0; i < BLOCK_SIZE && to_read > 0; i++) {
+			if (block[i] == 0) {
+				length--;
+			}
+
 			seen[block[i]]++;
 			to_read--;
 		}
