@@ -112,3 +112,11 @@ def call_native(name, args):
         return b"", False
 
     return proc.stdout.decode(), True
+
+def groups(string, size=3):
+    res = []
+
+    for i in range(0, len(string), size):
+        res.append(string[i:i+size])
+
+    return res

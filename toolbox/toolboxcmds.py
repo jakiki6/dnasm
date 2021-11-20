@@ -620,3 +620,24 @@ def pager():
         except KeyboardInterrupt:
             pass
 modes["pager"] = {"func": pager, "desc": "Look through dna like with 'more'"}
+
+def find_orf():
+    infn, = require(1, "<file>")
+
+    with open(infn, "r") as file:
+        content = "nnn" + file.read()
+
+    orfs = []
+
+    for i in range(0, 3):
+        pairs = utils.groups(content[i:])
+
+        has_end = False
+        for stop in constants.ACIDS["Stop"]:
+            has_end |= stop in pairs
+
+        if not has_end:
+            orfs.append(i)
+
+    print(f"Found ORF offsets: {orfs}")
+modes["find-orf"] = {"func": find_orf, "desc": "Find open reading frames"}
