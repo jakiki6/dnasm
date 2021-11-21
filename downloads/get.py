@@ -1,6 +1,13 @@
 #!/bin/env python3
 
 import sys, os, requests
+
+ps = __file__.split("/")
+while "." in ps:
+    ps.remove(".")
+__file__ = "/".join(ps)
+del ps
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
 import utils, constants
 
@@ -93,11 +100,11 @@ modes["cat-genome"] = {"func": cat_genome, "desc": "Downloads all chromosomes of
 
 def dog_genome():
     links = {}
-    ptr = 100
-    format = "CM025{}.1"
+    ptr = 25100
+    format = "CM{}.1"
 
     for i in (list(range(1, 39)) + ["X", "Y", "MT"]):
-        links[str(i)] = format.format(str(ptr).zfill(3))
+        links[str(i)] = format.format(str(ptr).zfill(6))
         ptr += 1
 
     if not os.path.isdir("dog"):
@@ -113,6 +120,31 @@ def dog_genome():
         with open(f"dog/chr{fn.upper()}.dna", "w") as file:
             file.write(data)
 modes["dog-genome"] = {"func": dog_genome, "desc": "Downloads all chromosomes of a dog (canis familiaris to be precise)"}
+
+def mouse_genome():
+    links = {}
+    ptr = 994
+    format = "CM{}.3"
+
+    for i in (list(range(1, 20)) + ["X", "Y"]):
+        links[str(i)] = format.format(str(ptr).zfill(6))
+        ptr += 1
+
+    links["MT"] = "AY172335.1"
+
+    if not os.path.isdir("mouse"):
+        os.mkdir("mouse")
+
+    for fn, link in links.items():
+        print(f"Downloading {fn}...")
+        data = fetch_nuccore(link)
+
+        print(f"Stripping {fn}...")
+        data = utils.strip_fasta(data)
+
+        with open(f"mouse/chr{fn.upper()}.dna", "w") as file:
+            file.write(data)
+modes["mouse-genome"] = {"func": mouse_genome, "desc": "Downloads all chromosomes of a mouse (mus musculus to be precise)"}
 
 def usage():
     print(sys.argv[0], "<mode>")
