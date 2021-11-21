@@ -1,10 +1,13 @@
 #!/bin/env python3
 
 import sys, os, requests
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "lib"))
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
 import utils, constants
 
 def fetch_bin(url):
+    if "DEBUG" in os.environ:
+        print(f"fetch '{url}'")
+
     try:
         content = b""
 
@@ -39,7 +42,7 @@ def fetch(url):
         exit(1)
 
 def fetch_nuccore(id):
-    return fetch(f"https://www.ncbi.nlm.nih.gov/nuccore/{id}?report=fasta&log$=seqview&format=text")
+    return fetch(f"https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&save=file&db=nuccore&report=fasta&id={id}")
         
 
 modes = {}
@@ -87,6 +90,29 @@ def cat_genome():
         with open(f"cat/chr{fn.upper()}.dna", "w") as file:
             file.write(data)
 modes["cat-genome"] = {"func": cat_genome, "desc": "Downloads all chromosomes of a cat (felis catus to be precise)"}
+
+def dog_genome():
+    links = {}
+    ptr = 100
+    format = "CM025{}.1"
+
+    for i in (list(range(1, 39)) + ["X", "Y", "MT"]):
+        links[str(i)] = format.format(str(ptr).zfill(3))
+        ptr += 1
+
+    if not os.path.isdir("dog"):
+        os.mkdir("dog")
+
+    for fn, link in links.items():
+        print(f"Downloading {fn}...")
+        data = fetch_nuccore(link)
+
+        print(f"Stripping {fn}...")
+        data = utils.strip_fasta(data)
+
+        with open(f"dog/chr{fn.upper()}.dna", "w") as file:
+            file.write(data)
+modes["dog-genome"] = {"func": dog_genome, "desc": "Downloads all chromosomes of a dog (canis familiaris to be precise)"}
 
 def usage():
     print(sys.argv[0], "<mode>")

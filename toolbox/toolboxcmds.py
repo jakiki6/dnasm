@@ -513,6 +513,7 @@ def analyse_entropy():
         import matplotlib.pyplot as plt
 
         plt.title(infn)
+        plt.axis([-30, len(entropies) + 30, -0.05, 1.05])
         plt.plot(entropies, linewidth=0.6)
         plt.show()
     if mode in ("i", "image"):
@@ -521,6 +522,8 @@ def analyse_entropy():
         import matplotlib.pyplot as plt
 
         plt.title(infn)
+        plt.axis([-30, len(entropies) + 30, -0.05, 1.05])
+        plt.margins(0.2)
         plt.plot(entropies, linewidth=0.6)
         plt.savefig(outfn)
     elif mode in ("c", "console"):
