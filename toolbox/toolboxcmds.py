@@ -142,6 +142,13 @@ def dump_utrs():
         ptr = 0
         fcontent = file.read()
 
+        orfs = utils.find_orfs(fcontent)
+        if len(orfs) == 0:
+            print("No ORF found")
+            return
+
+        fcontent = fcontent[orfs[0]:]
+
         utr5 = ""
         content = ""
         utr3 = ""
@@ -155,10 +162,10 @@ def dump_utrs():
                 utr5 += fcontent[ptr:ptr+3]
                 ptr += 3
                 if len(utr5) >= 3:
-                    if utr5.endswith("atg"):
+                    if utr5.endswith(constants.ACIDS["Start"][0]):
                         stage = 1
                         utr5 = utr5[:-3]
-                        content += "atg"
+                        content += constants.ACIDS["Start"][0]
             if stage == 1:
                 if (ptr + 3) >= len(fcontent):
                     print("Unaligned pair in content part!")
@@ -166,7 +173,7 @@ def dump_utrs():
                 pair = fcontent[ptr:ptr+3]
                 ptr += 3
                 content += pair
-                if pair in ("tag", "tga", "taa"):
+                if pair in constants.ACIDS["Stop"]:
                     stage = 2
             elif stage == 2:
                 utr3 += fcontent[ptr]
@@ -625,19 +632,21 @@ def find_orf():
     infn, = require(1, "<file>")
 
     with open(infn, "r") as file:
-        content = "nnn" + file.read()
+        content = file.read()
 
-    orfs = []
-
-    for i in range(0, 3):
-        pairs = utils.groups(content[i:])
-
-        has_end = False
-        for stop in constants.ACIDS["Stop"]:
-            has_end |= stop in pairs
-
-        if not has_end:
-            orfs.append(i)
+    orfs = utils.find_orfs(content)
 
     print(f"Found ORF offsets: {orfs}")
 modes["find-orf"] = {"func": find_orf, "desc": "Find open reading frames"}
+
+def strip_fasta():
+    infn, outfn = require(2, "<input> <output>")
+
+    with open(infn, "r") as file:
+        content = file.read()
+
+    content = utils.strip_fasta(content)
+
+    with open(outfn, "w") as file:
+        file.write(content)
+modes["strip-fasta"] = {"func": strip_fasta, "desc": "Strip FASTA file to raw"}

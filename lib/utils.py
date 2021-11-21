@@ -1,4 +1,5 @@
 import math, subprocess, os
+import constants
 
 debug = "DEBUG" in os.environ
 
@@ -120,3 +121,26 @@ def groups(string, size=3):
         res.append(string[i:i+size])
 
     return res
+
+def find_orfs(string):
+    content = "nnn" + string
+
+    orfs = []
+
+    for i in range(0, 3):
+        pairs = groups(content[i:])
+
+        has_start = False
+        is_open = True
+        for pair in pairs:
+            has_start |= (pair in constants.ACIDS["Start"])
+
+            if pair in constants.ACIDS["Stop"]:
+                if not has_start:
+                    is_open = False
+                break
+
+        if is_open:
+            orfs.append(i)
+
+    return orfs
