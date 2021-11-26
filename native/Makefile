@@ -1,4 +1,4 @@
-TARGETS = entropy
+TARGETS = entropy markov
 
 all: $(TARGETS)
 
@@ -10,5 +10,8 @@ clean:
 
 entropy: entropy.o
 	gcc -O2 -o $@ $^ -lm
+
+markov: markov.o
+	gcc -O2 -o $@ $^
 
 .PHONY: all clean
