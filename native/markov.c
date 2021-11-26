@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define depth 5
+#define depth 10
 
 int state[(1 << (depth * 2))] = { 0 };
 char buffer[depth];

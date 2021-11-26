@@ -112,7 +112,11 @@ def call_native(name, args):
     if proc.returncode != 0:
         return b"", False
 
-    return proc.stdout.decode(), True
+    ret = ""
+    for char in proc.stdout:
+        ret += chr(char)
+
+    return ret, True
 
 def groups(string, size=3):
     res = []

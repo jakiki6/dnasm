@@ -640,3 +640,36 @@ def strip_fasta():
     with open(outfn, "w") as file:
         file.write(content)
 modes["strip-fasta"] = {"func": strip_fasta, "desc": "Strip FASTA file to raw"}
+
+def find_patterns():
+    infn, = require(1, "<file>")
+
+    if not utils.has_native("markov"):
+        print("Please build the native binary 'markov' first")
+        exit(1)
+
+    blob, success = utils.call_native("markov", [infn, "/dev/stdout"])
+    if not success:
+        print("Native call failed")
+        exit(1)
+
+    depth = int(math.log2(len(blob)) / 2) - 1
+    patterns = []
+
+    for i in range(0, len(blob), 4):
+        name = ""
+        j = i // 4
+        for _ in range(0, depth):
+            name += "atcg"[j & 0b11]
+            j >>= 2
+
+        times = int.from_bytes(blob[i:i+4].encode(), sys.byteorder)
+
+        if times > 0:
+            patterns.append((name, times))
+
+    patterns = sorted(patterns, key=lambda x: x[1])[::-1]
+
+    for name, count in patterns:
+        print(name, count)
+modes["find-patterns"] = {"func": find_patterns, "desc": "Use markov chains to find repeating patterns"}
