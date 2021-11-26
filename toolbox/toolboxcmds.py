@@ -600,35 +600,22 @@ modes["to-image"] = {"func": to_image, "desc": "Convert dna into an image"}
 
 def pager():
     infn, = require(1, "<input file>")
+    ptr = 1
 
     with open(infn, "r") as inf:
-        inf.seek(0, 2)
-        length = inf.tell()
-        inf.seek(0)
+        while True:
+            parts = []
 
-        try:
-            while True:
-                print("\x1b[H\x1b[2J\x1b[3J", end="")
+            for i in range(0, 6):
+                parts.append(inf.read(10))
 
-                chunk = inf.read(25 * 80)
+            if parts[0] == "":
+                break
 
-                if len(chunk) == 0:
-                    break
-                elif len(chunk) < 25 * 80:
-                    chunk += " " * (len(chunk) - 25 * 80)
+            print(str(ptr).rjust(9) + " ", end="")
+            print(" ".join(parts))
+            ptr += 60
 
-                data = f"===== Block {math.ceil(inf.tell() / (25 * 80)) - 1} of {(length // (25 * 80))} =====\n"
-                for i in range(0, 25):
-                    data += chunk[i * 80:(i+1) * 80] + "\n"
-
-                res = input(data)
-
-                try:
-                    inf.seek(int(res) * 25 * 80)
-                except:
-                    pass
-        except KeyboardInterrupt:
-            pass
 modes["pager"] = {"func": pager, "desc": "Look through dna like with 'more'"}
 
 def find_orf():

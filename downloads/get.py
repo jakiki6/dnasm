@@ -146,6 +146,23 @@ def mouse_genome():
             file.write(data)
 modes["mouse-genome"] = {"func": mouse_genome, "desc": "Downloads all chromosomes of a mouse (mus musculus to be precise)"}
 
+def corona():
+    links = {"sars_cov2": "NC_045512"}
+
+    if not os.path.isdir("corona"):
+        os.mkdir("corona")
+
+    for fn, link in links.items():
+        print(f"Downloading {fn}...")
+        data = fetch_nuccore(link)
+
+        print(f"Stripping {fn}...")
+        data = utils.strip_fasta(data)
+
+        with open(f"corona/{fn}.dna", "w") as file:
+            file.write(data)
+modes["corona"] = {"func": corona, "desc": "Downloads genomes of corona viruses (only SARS-Cov-2 atm)"}
+
 def usage():
     print(sys.argv[0], "<mode>")
 
