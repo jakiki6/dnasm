@@ -1,6 +1,6 @@
 import sys, os, requests, random, re, math, json
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
-import database, utils, constants
+import utils, constants
 
 def require(num, usage):
     if len(sys.argv) - 2 < num:
@@ -24,12 +24,6 @@ def nop():
     require(0, "")
     pass
 modes["nop"] = {"func": nop, "desc": "No operation\nJust for testing"}
-
-def build_snippet():
-    file = require(1, "<file>")[0]
-    data = get_file_content(file, "rb")
-    print(f"Building snippet object {database.save_raw_object(database.build_data_object(data))}")
-modes["build-snippet"] = {"func": build_snippet, "desc": "Builds rna into the snippet format"}
 
 def partition_genome():
     infile, outfile = require(2, "<input file> <output file>")
@@ -61,17 +55,6 @@ def partition_genome():
     with open(outfile, "w") as file:
         file.write(asm)
 modes["partition-genome"] = {"func": partition_genome, "desc": "Tool to split huge genome into sections and label them"}
-
-def build_assembly_from_nih():
-    name, outfile = require(2, "<id> <output file>")
-
-    buf = requests.get(f"https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id={name}").content.decode()
-
-    if buf.startswith("Failed"):
-        print(f"{name} not found in database")
-        exit(2)
-
-    data = utils.tabs2dict(buf)
 
 def mutate_genome():
     filename, mode, ratio = require(3, "<file name> <mode> <ratio>")

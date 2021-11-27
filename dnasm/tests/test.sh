@@ -94,7 +94,7 @@ assemble
 
 if (ping -c 1 8.8.8.8 > /dev/null); then
 	echo -n Test 15: Protein loading system ... 
-	echo protein_db WP_001149592.1 > tmp/test.asm # I don't have that protein :(
+	echo protein_db WP_001149592.1 > tmp/test.asm
 	echo -n > tmp/ref.rna
 	ran=$((ran + 1))
 	python3 ../dnasm.py tmp/test.asm -o tmp/test.rna > /dev/null && \
@@ -113,12 +113,6 @@ echo start > tmp/test.asm
 echo %include tmp/test2.asm >> tmp/test.asm
 echo end > tmp/test2.asm
 echo -n atgtaa > tmp/ref.rna
-assemble
-
-echo Test 17: snippet database
-echo -n "  1. from local database ... "
-echo snippet 001cee75e7265a50f646b1bbf527ef652b0bbdc1a65d55463647e7adf8ba708a9f > tmp/test.asm
-cp ../../data/sarscov2.dna tmp/ref.rna &> /dev/null
 assemble
 
 rm -fr tmp

@@ -1,4 +1,4 @@
-from . import basic, protein, database
+from . import basic, protein
 
 def run(line, rna):
     if line.opcode in OPCODES.keys():
@@ -15,7 +15,6 @@ OPCODES = {
     "protein_db": protein.get_protein_by_id,
     "tail": basic.tail,
     "pad": basic.pad,
-    "snippet": database.snippet,
     "cap": basic.cap,
     "linker": basic.linker,
     "compressed": basic.compressed,
